@@ -2016,3 +2016,546 @@ body.light-theme .settings-panel select option:checked {
     height: 280px;
   }
 }
+
+@media (max-width: 768px) {
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  body.auth-active {
+    overflow-y: auto;
+  }
+
+  .auth-shell {
+    position: fixed;
+    padding: 12px;
+  }
+
+  .landing-content,
+  .main-shell,
+  .content-area,
+  .app-section,
+  .panel,
+  .auth-visual,
+  .auth-panel,
+  .auth-card,
+  .how-card,
+  .landing-section {
+    max-width: 100%;
+  }
+
+  .auth-panel,
+  .auth-visual {
+    padding: 20px;
+  }
+
+  .auth-page-view {
+    min-height: auto;
+    padding: 0;
+  }
+
+  .auth-page-view .auth-card {
+    width: 100%;
+  }
+
+  .auth-form,
+  .settings-field-grid,
+  .settings-action-grid,
+  .transaction-layout,
+  .charts-layout,
+  .forecast-grid,
+  .dashboard-layout,
+  .report-grid,
+  .performance-report-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-actions,
+  .header-actions {
+    align-items: stretch;
+  }
+
+  .cta-actions .action-button,
+  .action-button,
+  .ghost-button,
+  .delete-button {
+    width: 100%;
+  }
+
+  .quick-actions-panel .action-button,
+  .settings-action-grid .action-button {
+    justify-content: center;
+  }
+
+  .dashboard-shell {
+    width: 100%;
+  }
+
+  .sidebar {
+    overflow: hidden;
+  }
+
+  .sidebar-nav {
+    padding-bottom: 6px;
+    scrollbar-width: thin;
+  }
+
+  .nav-item {
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .top-header {
+    gap: 16px;
+  }
+
+  .header-actions > * {
+    width: 100%;
+  }
+
+  .search-group {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-results {
+    max-height: 300px;
+  }
+
+  .date-pill,
+  .status-badge,
+  .profile-chip {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .metric-card {
+    min-height: 156px;
+    padding: 18px;
+  }
+
+  .table-wrap,
+  .report-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 640px;
+  }
+
+  th,
+  td {
+    padding: 12px 10px;
+  }
+
+  .chart-box {
+    height: 300px;
+  }
+
+  .tall-chart {
+    height: 330px;
+  }
+
+  .monthly-report-card {
+    gap: 12px;
+  }
+
+  .report-transactions-panel {
+    padding: 14px;
+  }
+
+  .toggle-row {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-shell,
+  .main-shell {
+    padding: 10px;
+  }
+
+  .landing-hero {
+    gap: 14px;
+  }
+
+  .auth-visual,
+  .auth-panel,
+  .auth-card,
+  .landing-section,
+  .how-card {
+    padding: 16px;
+    border-radius: 18px;
+  }
+
+  .auth-brand {
+    align-items: flex-start;
+  }
+
+  .brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+  }
+
+  .auth-hero-copy h1,
+  .cta-section h2,
+  .section-heading-page h2,
+  .auth-card h2 {
+    font-size: 1.75rem;
+  }
+
+  .hero-step-list > div {
+    grid-template-columns: 36px minmax(0, 1fr);
+    padding: 12px;
+  }
+
+  .hero-step-list span {
+    width: 34px;
+    height: 34px;
+  }
+
+  .cta-actions .action-button {
+    min-width: 0;
+  }
+
+  .sidebar {
+    padding: 10px;
+  }
+
+  .brand-block {
+    padding: 10px;
+  }
+
+  .sidebar-nav {
+    gap: 6px;
+  }
+
+  .nav-item,
+  .nav-item:not(.active) {
+    min-height: 40px;
+    padding: 9px 10px;
+    font-size: 0.84rem;
+  }
+
+  .nav-item span {
+    width: 26px;
+    height: 26px;
+  }
+
+  .top-header,
+  .panel,
+  .settings-panel {
+    padding: 14px;
+  }
+
+  .search-shell {
+    height: 44px;
+  }
+
+  .metric-grid,
+  .analytics-kpis,
+  .mini-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-card {
+    min-height: 144px;
+  }
+
+  .metric-card strong,
+  .mini-kpi strong,
+  .forecast-card strong,
+  .report-card strong {
+    font-size: 1.45rem;
+  }
+
+  .filters,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  table {
+    min-width: 580px;
+  }
+
+  .compact-table table,
+  .report-table-wrap table {
+    min-width: 520px;
+  }
+
+  .chart-box,
+  .tall-chart {
+    height: 260px;
+  }
+
+  .toggle-row {
+    flex-direction: column;
+  }
+
+  .toggle-row input {
+    align-self: flex-start;
+  }
+
+  .report-toast {
+    right: 12px;
+    bottom: 12px;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+@media (max-width: 860px) {
+  .dashboard-shell {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .main-shell {
+    width: min(100%, 760px);
+    margin: 0 auto;
+    padding: 14px;
+  }
+
+  .top-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+    min-height: auto;
+    padding: 16px;
+    gap: 16px;
+    border-radius: 20px;
+  }
+
+  .top-header h1 {
+    font-size: clamp(1.8rem, 8vw, 2.25rem);
+    line-height: 1.08;
+  }
+
+  .top-header p:not(.eyebrow) {
+    line-height: 1.5;
+  }
+
+  .header-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+
+  .search-group {
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-shell {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .search-results {
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 300px;
+  }
+
+  .date-pill,
+  .status-badge,
+  .profile-chip {
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    min-height: 40px;
+    padding: 0 10px;
+    font-size: 0.84rem;
+  }
+
+  .profile-chip {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar {
+    width: 100%;
+    overflow: visible;
+  }
+
+  .sidebar-nav {
+    width: 100%;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+
+  .nav-item,
+  .nav-item:not(.active) {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .content-area {
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .app-section,
+  .app-section.active,
+  .section-grid,
+  .dashboard-layout,
+  .transaction-layout,
+  .charts-layout,
+  .forecast-grid,
+  .settings-grid,
+  .reports-layout,
+  .primary-column,
+  .insights-column,
+  .panel,
+  .monthly-report-card,
+  .report-transactions-panel {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .section-grid,
+  .dashboard-layout,
+  .transaction-layout,
+  .charts-layout,
+  .forecast-grid,
+  .settings-grid,
+  .reports-layout,
+  .insights-column {
+    gap: 16px;
+  }
+
+  .section-heading-page,
+  .panel-heading,
+  .filters-heading {
+    width: 100%;
+    margin-bottom: 16px;
+    gap: 10px;
+  }
+
+  .metric-grid,
+  .analytics-kpis,
+  .report-grid,
+  .performance-report-grid,
+  .settings-field-grid,
+  .settings-action-grid,
+  .transaction-layout,
+  .charts-layout,
+  .forecast-grid,
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .panel,
+  .metric-card,
+  .mini-kpi,
+  .forecast-card,
+  .report-card,
+  .monthly-report-card {
+    border-radius: 20px;
+  }
+
+  .form-grid,
+  .filters {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .form-grid input,
+  .form-grid textarea,
+  .settings-panel input,
+  .settings-panel select,
+  .filters input,
+  .filters select,
+  .action-button,
+  .ghost-button,
+  .delete-button {
+    width: 100%;
+  }
+
+  .table-wrap,
+  .report-table-wrap {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 640px;
+  }
+
+  .chart-box,
+  .tall-chart {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .chart-box canvas,
+  .tall-chart canvas {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 560px) {
+  .main-shell {
+    padding: 12px;
+  }
+
+  .top-header,
+  .panel,
+  .settings-panel,
+  .report-transactions-panel {
+    padding: 14px;
+  }
+
+  .header-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .date-pill,
+  .status-badge,
+  .profile-chip {
+    min-height: 42px;
+  }
+
+  .metric-grid,
+  .analytics-kpis,
+  .mini-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading-page h2 {
+    font-size: 1.65rem;
+  }
+
+  .table-wrap table {
+    min-width: 580px;
+  }
+
+  .compact-table table,
+  .report-table-wrap table {
+    min-width: 520px;
+  }
+}
