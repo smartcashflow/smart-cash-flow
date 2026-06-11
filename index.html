@@ -203,6 +203,10 @@
         <section class="app-section active" id="dashboard-section">
           <div class="section-grid dashboard-layout">
             <div class="primary-column">
+              <div class="period-context dashboard-period-helper">
+                <p class="period-title" id="dashboardTodayTitle">Today's Cash Movement</p>
+                <p class="period-helper" id="dashboardTodayHelper">These cards show today's inflows, outflows, net movement, and status only.</p>
+              </div>
               <div class="metric-grid">
                 <article class="metric-card glow-green">
                   <p>Today's Cash Inflows</p>
@@ -266,22 +270,29 @@
                   </div>
                 </div>
                 <button class="action-button primary-action" type="button" data-jump="transactions">Add Transaction</button>
-                <button class="action-button" type="button" data-jump="reports">Generate Report</button>
+                <button class="action-button" type="button" data-jump="reports">View Monthly Reports</button>
                 <button class="action-button" type="button" data-jump="forecasting">View Forecast</button>
               </div>
 
+              <div class="period-context snapshot-context">
+                <p class="period-title" id="businessSnapshotTitle">Business Snapshot</p>
+                <p class="period-helper" id="businessSnapshotHelper">Based on stored transactions and recent activity.</p>
+              </div>
               <div class="mini-kpi-grid">
                 <article class="mini-kpi">
                   <span>Cash Runway</span>
                   <strong id="cashRunway">-- days</strong>
+                  <small id="cashRunwayCaption">Based on available cash and average daily outflows</small>
                 </article>
                 <article class="mini-kpi">
                   <span>Operating Cash Flow</span>
                   <strong id="operatingCashFlow">$0.00</strong>
+                  <small id="operatingCashFlowCaption">Across stored transactions</small>
                 </article>
                 <article class="mini-kpi">
                   <span>Top Expense Category</span>
                   <strong id="topExpenseCategory">--</strong>
+                  <small id="topExpenseCategoryCaption">Across stored transactions</small>
                 </article>
               </div>
 
@@ -292,6 +303,7 @@
                     <h2>Quick Insights</h2>
                   </div>
                 </div>
+                <p class="period-helper" id="quickInsightsHelper">Snapshot metrics use stored transaction history.</p>
                 <div class="insight-list" id="quickInsights"></div>
               </div>
             </aside>
@@ -358,14 +370,37 @@
                   <p class="eyebrow">History</p>
                   <h2>Transactions Table</h2>
                 </div>
-                <div class="filters">
-                  <select id="typeFilter" aria-label="Type filter">
-                    <option value="all">All types</option>
-                    <option value="inflow">Inflows</option>
-                    <option value="outflow">Outflows</option>
-                  </select>
-                  <input type="date" id="dateFilter" aria-label="Date filter">
-                  <input type="search" id="categoryFilter" placeholder="Search category">
+                <div class="transactions-filter-bar">
+                  <div class="filters filter-row-primary">
+                    <select id="typeFilter" aria-label="Type filter">
+                      <option value="all">All types</option>
+                      <option value="inflow">Inflows</option>
+                      <option value="outflow">Outflows</option>
+                    </select>
+                    <input type="search" id="categoryFilter" placeholder="Search category">
+                    <button class="filter-clear-button" type="button" id="clearFiltersButton">Clear</button>
+                  </div>
+                  <div class="filters filter-row-date">
+                    <input type="date" id="dateFilter" aria-label="Date filter">
+                    <select id="monthFilter" aria-label="Month filter">
+                      <option value="">Month</option>
+                      <option value="01">January</option>
+                      <option value="02">February</option>
+                      <option value="03">March</option>
+                      <option value="04">April</option>
+                      <option value="05">May</option>
+                      <option value="06">June</option>
+                      <option value="07">July</option>
+                      <option value="08">August</option>
+                      <option value="09">September</option>
+                      <option value="10">October</option>
+                      <option value="11">November</option>
+                      <option value="12">December</option>
+                    </select>
+                    <select id="yearFilter" aria-label="Year filter">
+                      <option value="">Year</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
@@ -396,10 +431,78 @@
             </div>
           </div>
 
+          <div class="panel analytics-controls-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Analysis Controls</p>
+                <h2>Analytics Period</h2>
+                <p class="analytics-helper-text">Choose a period or compare multiple months to understand business performance.</p>
+              </div>
+              <span class="section-chip" id="analyticsPeriodLabel">Showing analytics for: Last 14 Days</span>
+            </div>
+
+            <div class="analytics-control-grid">
+              <label>
+                Analysis Period
+                <select id="analyticsPeriodSelector">
+                  <option value="last7">Last 7 Days</option>
+                  <option value="last14" selected>Last 14 Days</option>
+                  <option value="last30">Last 30 Days</option>
+                  <option value="currentMonth">Current Month to Date</option>
+                  <option value="previousMonth">Previous Month</option>
+                  <option value="customRange">Custom Range</option>
+                  <option value="monthlyComparison">Monthly Comparison</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="analytics-control-grid analytics-custom-controls" id="analyticsCustomControls" hidden>
+              <label>
+                From Date
+                <input type="date" id="analyticsFromDate">
+              </label>
+              <label>
+                To Date
+                <input type="date" id="analyticsToDate">
+              </label>
+              <button class="action-button" type="button" id="analyticsClearRangeButton">Clear</button>
+            </div>
+
+            <div class="analytics-control-grid analytics-compare-controls" id="analyticsCompareControls" hidden>
+              <label>
+                Start Month
+                <select id="comparisonStartMonth"></select>
+              </label>
+              <label>
+                Start Year
+                <select id="comparisonStartYear"></select>
+              </label>
+              <label>
+                End Month
+                <select id="comparisonEndMonth"></select>
+              </label>
+              <label>
+                End Year
+                <select id="comparisonEndYear"></select>
+              </label>
+            </div>
+
+            <p class="analytics-validation" id="analyticsValidation" hidden></p>
+          </div>
+
+          <div class="analytics-comparison-grid" id="analyticsComparisonGrid" hidden></div>
+
+          <div class="monthly-comparison-intro" id="monthlyComparisonIntro" hidden>
+            <p class="eyebrow">Monthly Comparison</p>
+            <h2>Compare monthly cash flow performance</h2>
+            <p>Compare inflows, outflows, and net cash flow across selected months.</p>
+          </div>
+
           <div class="analytics-kpis">
             <article class="mini-kpi"><span>Total Inflows</span><strong id="totalInflows">$0.00</strong></article>
             <article class="mini-kpi"><span>Total Outflows</span><strong id="totalOutflows">$0.00</strong></article>
-            <article class="mini-kpi"><span>Average Net Cash Flow</span><strong id="averageNet">$0.00</strong></article>
+            <article class="mini-kpi"><span>Net Cash Flow</span><strong id="analyticsNetCashFlow">$0.00</strong></article>
+            <article class="mini-kpi"><span>Average Net Cash Flow</span><strong id="averageNet">$0.00</strong><small id="averageNetCaption">Per calendar day in selected period</small></article>
             <article class="mini-kpi"><span>Number of Transactions</span><strong id="numberOfTransactions">0</strong></article>
           </div>
 
@@ -434,6 +537,40 @@
             </div>
             <div class="category-analysis" id="categoryAnalysis"></div>
           </div>
+
+          <div class="panel monthly-summary-panel" id="monthlySummaryPanel" hidden>
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Monthly Summary</p>
+                <h2>Monthly Performance Table</h2>
+              </div>
+            </div>
+            <div class="table-wrap monthly-summary-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Month</th>
+                    <th>Total Inflows</th>
+                    <th>Total Outflows</th>
+                    <th>Net Cash Flow</th>
+                    <th>Transactions</th>
+                    <th>Average Daily Net</th>
+                  </tr>
+                </thead>
+                <tbody id="monthlySummaryBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel monthly-insights-panel" id="monthlyInsightsPanel" hidden>
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Insights</p>
+                <h2>Monthly Comparison Insights</h2>
+              </div>
+            </div>
+            <div class="insight-list" id="monthlyComparisonInsights"></div>
+          </div>
         </section>
 
         <section class="app-section" id="forecasting-section">
@@ -449,16 +586,17 @@
               <div class="panel-heading">
                 <div>
                   <p class="eyebrow">Short-Term Outlook</p>
-                  <h2>7-Day Forecast Chart</h2>
+                  <h2>Projected Net Movement Forecast</h2>
                 </div>
               </div>
+              <p class="period-helper forecast-helper" id="forecastHelper">Forecast is based on recent average daily net cash flow over the last 7 calendar days. It estimates cash movement, not guaranteed future balance.</p>
               <div class="chart-box tall-chart"><canvas id="forecastChart"></canvas></div>
             </article>
 
             <div class="forecast-side">
-              <article class="forecast-card"><span>After 7 days</span><strong id="forecast7">$0.00</strong></article>
-              <article class="forecast-card"><span>After 14 days</span><strong id="forecast14">$0.00</strong></article>
-              <article class="forecast-card"><span>After 30 days</span><strong id="forecast30">$0.00</strong></article>
+              <article class="forecast-card"><span>Projected Net Movement in 7 Days</span><strong id="forecast7">$0.00</strong><small>Based on recent daily average</small></article>
+              <article class="forecast-card"><span>Projected Net Movement in 14 Days</span><strong id="forecast14">$0.00</strong><small>Based on recent daily average</small></article>
+              <article class="forecast-card"><span>Projected Net Movement in 30 Days</span><strong id="forecast30">$0.00</strong><small>Based on recent daily average</small></article>
               <div class="insight-alert balanced" id="forecastInsight">Forecast insight is ready.</div>
             </div>
           </div>
@@ -470,10 +608,31 @@
               <p class="eyebrow">Executive View</p>
               <h2>Reports</h2>
             </div>
-            <button class="action-button primary-action compact-action report-export-button" type="button" id="exportReportButton">Export Report</button>
           </div>
 
           <div class="reports-layout">
+            <article class="panel report-controls-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Report Controls</p>
+                  <h2>Monthly Financial Report</h2>
+                </div>
+                <span class="section-chip" id="selectedReportPeriod">Current Month</span>
+              </div>
+              <div class="report-controls-grid">
+                <label>
+                  Report Month
+                  <select id="reportMonthSelector"></select>
+                </label>
+                <label>
+                  Report Year
+                  <select id="reportYearSelector"></select>
+                </label>
+                <button class="action-button primary-action report-export-button" type="button" id="exportReportButton">Export PDF</button>
+              </div>
+              <p class="report-controls-helper">Report updates automatically when month or year changes.</p>
+            </article>
+
             <article class="panel monthly-report-card">
               <div>
                 <p class="eyebrow">Monthly Summary</p>
@@ -485,23 +644,36 @@
             <div class="report-card-group">
               <p class="eyebrow">Financial Summary</p>
               <div class="report-grid">
-                <article class="report-card"><span>Total Inflows</span><strong id="reportInflows">$0</strong></article>
-                <article class="report-card"><span>Total Outflows</span><strong id="reportOutflows">$0</strong></article>
-                <article class="report-card"><span>Net Cash Flow</span><strong id="reportNet">$0</strong></article>
-                <article class="report-card"><span>Business Status</span><strong id="reportBusinessStatus">Balanced</strong></article>
+                <article class="report-card"><span>Total Inflows</span><strong id="reportInflows">$0</strong><small>Selected month inflows</small></article>
+                <article class="report-card"><span>Total Outflows</span><strong id="reportOutflows">$0</strong><small>Selected month outflows</small></article>
+                <article class="report-card"><span>Net Cash Flow</span><strong id="reportNet">$0</strong><small>Inflows minus outflows</small></article>
+                <article class="report-card"><span>Business Status</span><strong id="reportBusinessStatus">Balanced</strong><small>Monthly cash position</small></article>
               </div>
             </div>
 
             <div class="report-card-group">
               <p class="eyebrow">Performance Details</p>
               <div class="report-grid performance-report-grid">
-                <article class="report-card"><span>Best Day</span><strong id="bestDay">--</strong></article>
-                <article class="report-card"><span>Worst Day</span><strong id="worstDay">--</strong></article>
-                <article class="report-card"><span>Top Expense Category</span><strong id="reportTopExpense">--</strong></article>
-                <article class="report-card"><span>Number of Transactions</span><strong id="reportTransactionCount">0</strong></article>
-                <article class="report-card"><span>Average Net Cash Flow</span><strong id="reportAverageNet">--</strong></article>
+                <article class="report-card report-detail-card"><span>Best Day</span><strong id="bestDay">--</strong></article>
+                <article class="report-card report-detail-card"><span>Worst Day</span><strong id="worstDay">--</strong></article>
+                <article class="report-card report-detail-card"><span>Top Expense Category</span><strong id="reportTopExpense">--</strong></article>
+                <article class="report-card"><span>Number of Transactions</span><strong id="reportTransactionCount">0</strong><small>Selected month records</small></article>
+                <article class="report-card"><span>Average Net Cash Flow</span><strong id="reportAverageNet">--</strong><small>Daily monthly average</small></article>
               </div>
             </div>
+
+            <article class="panel report-analysis-panel">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Visual Analysis</p>
+                  <h2>Recommended Actions</h2>
+                </div>
+              </div>
+              <div class="report-analysis-layout">
+                <div class="report-analysis-bars" id="reportAnalysisBars"></div>
+                <div class="report-recommendations" id="reportRecommendations"></div>
+              </div>
+            </article>
 
             <article class="panel report-transactions-panel">
               <div class="panel-heading">
@@ -574,6 +746,14 @@
                     <option value="Services">Services</option>
                     <option value="Online Store">Online Store</option>
                     <option value="Other">Other</option>
+                  </select>
+                </label>
+
+                <label>
+                  Language
+                  <select id="languageSelector">
+                    <option value="en">English</option>
+                    <option value="ar">العربية</option>
                   </select>
                 </label>
               </div>

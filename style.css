@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #050914;
   --bg-2: #08111f;
   --panel: rgba(13, 24, 42, 0.78);
@@ -66,6 +66,22 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+select option {
+  color: #08162a;
+  background: #ffffff;
+}
+
+select option:hover,
+select option:focus {
+  color: #001318;
+  background: #dffcf0;
+}
+
+select option:checked {
+  color: #001318;
+  background: #b8f7e2;
 }
 
 button {
@@ -764,6 +780,8 @@ body.light-theme .sidebar {
 }
 
 .top-header {
+  position: relative;
+  z-index: 120;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -774,6 +792,7 @@ body.light-theme .sidebar {
     linear-gradient(135deg, rgba(34, 211, 238, 0.07), transparent 42%),
     rgba(13, 24, 42, 0.7);
   border-radius: var(--radius);
+  overflow: visible;
 }
 
 body.light-theme .top-header {
@@ -814,18 +833,22 @@ h2 {
 }
 
 .header-actions {
+  position: relative;
+  z-index: 130;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 12px;
   flex-wrap: wrap;
+  overflow: visible;
 }
 
 .search-group {
   position: relative;
   width: min(460px, 100%);
   min-width: 330px;
-  z-index: 30;
+  z-index: 1000;
+  overflow: visible;
 }
 
 .search-shell {
@@ -860,12 +883,12 @@ h2 {
 .search-results {
   position: absolute;
   top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  z-index: 80;
+  inset-inline-start: 0;
+  inset-inline-end: 0;
+  z-index: 9999;
   display: none;
   width: 100%;
-  max-height: min(390px, calc(100vh - 180px));
+  max-height: min(360px, calc(100vh - 180px));
   overflow-y: auto;
   overflow-x: hidden;
   padding: 10px;
@@ -1037,6 +1060,39 @@ textarea:focus {
   gap: 18px;
 }
 
+.period-helper {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.period-context {
+  display: grid;
+  gap: 4px;
+}
+
+.period-title {
+  margin: 0;
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.dashboard-period-helper {
+  margin-bottom: 12px;
+}
+
+.snapshot-context {
+  margin: 2px 0 -2px;
+}
+
+.forecast-helper {
+  margin: -4px 0 14px;
+}
+
 .metric-card,
 .panel,
 .mini-kpi,
@@ -1049,9 +1105,10 @@ textarea:focus {
 .metric-card {
   position: relative;
   display: grid;
-  grid-template-rows: 36px 40px 38px;
+  grid-template-rows: minmax(34px, auto) minmax(42px, auto) minmax(34px, auto);
   row-gap: 10px;
   align-content: center;
+  min-width: 0;
   min-height: 178px;
   padding: 22px;
   overflow: hidden;
@@ -1101,9 +1158,11 @@ textarea:focus {
 .metric-card p {
   display: flex;
   align-items: flex-end;
+  min-width: 0;
   min-height: 0;
   margin-bottom: 0;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .metric-card .metric-title-compact {
@@ -1122,14 +1181,26 @@ textarea:focus {
 }
 
 .metric-card strong {
+  width: 100%;
+  min-width: 0;
   min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: clamp(1.35rem, 1.65vw, 1.95rem);
+  line-height: 1.12;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.metric-card small {
+.metric-card small,
+.mini-kpi small,
+.forecast-card small {
   display: block;
+  min-width: 0;
   margin-top: 0;
   color: var(--muted);
   line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .insight-alert {
@@ -1270,8 +1341,148 @@ textarea:focus {
 }
 
 .analytics-kpis {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   margin-bottom: 18px;
+}
+
+.analytics-controls-panel {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.analytics-controls-panel .panel-heading {
+  align-items: flex-start;
+}
+
+.analytics-helper-text {
+  max-width: 620px;
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.analytics-control-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+
+.analytics-control-grid label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.analytics-control-grid input,
+.analytics-control-grid select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 11px 12px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  outline: none;
+}
+
+.analytics-custom-controls,
+.analytics-compare-controls {
+  padding-top: 2px;
+}
+
+.analytics-validation {
+  margin: 0;
+  padding: 12px 14px;
+  color: #fecdd3;
+  background: rgba(251, 113, 133, 0.12);
+  border: 1px solid rgba(251, 113, 133, 0.24);
+  border-radius: 14px;
+}
+
+.analytics-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.comparison-card {
+  display: grid;
+  gap: 7px;
+  min-height: 132px;
+  padding: 16px;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022)),
+    var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.comparison-card span,
+.comparison-card small {
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.comparison-card strong {
+  color: var(--text);
+  font-size: clamp(1.08rem, 1.5vw, 1.35rem);
+  line-height: 1.1;
+}
+
+.comparison-card em {
+  font-style: normal;
+  font-weight: 800;
+}
+
+.comparison-card.surplus em {
+  color: var(--green);
+}
+
+.comparison-card.deficit em {
+  color: var(--red);
+}
+
+.comparison-card.balanced em {
+  color: var(--amber);
+}
+
+.monthly-comparison-intro {
+  margin-bottom: 18px;
+  padding: 18px 20px;
+  background:
+    linear-gradient(135deg, rgba(34, 211, 238, 0.1), rgba(52, 211, 153, 0.045)),
+    var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.monthly-comparison-intro h2 {
+  margin-bottom: 8px;
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+}
+
+.monthly-comparison-intro p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.monthly-summary-panel,
+.monthly-insights-panel {
+  margin-top: 18px;
+}
+
+.monthly-summary-table-wrap table {
+  min-width: 820px;
 }
 
 .mini-kpi,
@@ -1363,13 +1574,70 @@ textarea {
 }
 
 .filters-heading {
-  align-items: end;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 16px;
+}
+
+.transactions-filter-bar {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .filters {
   display: grid;
-  grid-template-columns: 130px 150px 190px;
-  gap: 10px;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.filter-row-primary {
+  grid-template-columns: minmax(140px, 180px) minmax(220px, 1fr) minmax(120px, 150px);
+}
+
+.filter-row-date {
+  grid-template-columns: repeat(3, minmax(150px, 1fr));
+  max-width: min(620px, 100%);
+}
+
+.filters > * {
+  min-width: 0;
+}
+
+.filter-clear-button {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 15px;
+  color: var(--text);
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.055);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
+}
+
+.filter-clear-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(34, 211, 238, 0.34);
+  background: rgba(34, 211, 238, 0.1);
+}
+
+.filters select option {
+  color: #08162a;
+  background: #ffffff;
+}
+
+.filters select option:checked {
+  color: #001318;
+  background: #b8f7e2;
 }
 
 .table-wrap {
@@ -1522,6 +1790,44 @@ tbody tr:hover {
   gap: 18px;
 }
 
+.report-controls-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.report-controls-grid {
+  display: grid;
+  grid-template-columns: minmax(170px, 1fr) minmax(150px, 0.75fr) minmax(150px, 0.75fr);
+  gap: 12px;
+  align-items: end;
+}
+
+.report-controls-grid label {
+  display: grid;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.report-controls-grid select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 11px 12px;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  outline: none;
+}
+
+.report-controls-helper {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .monthly-report-card {
   display: flex;
   justify-content: space-between;
@@ -1558,15 +1864,16 @@ tbody tr:hover {
 }
 
 .performance-report-grid {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
 }
 
 .report-card {
   display: grid;
-  grid-template-rows: 34px minmax(38px, 1fr);
-  align-content: center;
-  min-height: 118px;
-  padding: 18px;
+  grid-template-rows: auto minmax(34px, auto) auto;
+  align-content: start;
+  gap: 10px;
+  min-height: 132px;
+  padding: 20px;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022)),
     var(--panel);
@@ -1575,14 +1882,171 @@ tbody tr:hover {
 
 .report-card span {
   margin: 0;
-  font-size: 0.76rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 850;
   line-height: 1.25;
 }
 
 .report-card strong {
-  align-self: end;
-  font-size: clamp(1.05rem, 1.35vw, 1.35rem);
-  line-height: 1.18;
+  display: block;
+  align-self: start;
+  color: var(--text);
+  font-size: clamp(1.08rem, 1.45vw, 1.5rem);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.report-card small {
+  color: var(--faint);
+  line-height: 1.35;
+}
+
+.report-detail-card strong {
+  display: grid;
+  gap: 5px;
+}
+
+.report-detail-card .report-detail-main {
+  color: var(--text);
+  font-size: clamp(1rem, 1.25vw, 1.24rem);
+}
+
+.report-detail-card .report-detail-sub {
+  color: var(--muted);
+  font-size: 0.98rem;
+  font-weight: 850;
+}
+
+.report-analysis-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.report-analysis-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.72fr);
+  gap: 14px;
+}
+
+.report-analysis-bars,
+.report-recommendations {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.analysis-block {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+
+.analysis-block-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.analysis-block-heading span {
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 900;
+}
+
+.analysis-block-heading small {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.analysis-bar-row {
+  display: grid;
+  gap: 8px;
+}
+
+.analysis-bar-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.analysis-bar-label strong {
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.analysis-bar-track {
+  height: 10px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.14);
+  border-radius: 999px;
+}
+
+.analysis-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+}
+
+.analysis-bar-fill.inflow {
+  background: linear-gradient(90deg, var(--green), var(--teal));
+}
+
+.analysis-bar-fill.outflow {
+  background: linear-gradient(90deg, var(--red), #f472b6);
+}
+
+.analysis-bar-fill.net {
+  background: linear-gradient(90deg, var(--blue), var(--cyan));
+}
+
+.analysis-note {
+  margin: 2px 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.expense-breakdown ol,
+.recommendation-block ol {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.expense-breakdown li,
+.recommendation-block li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 10px 12px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  border-radius: 14px;
+  line-height: 1.45;
+}
+
+.expense-breakdown li strong {
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.recommendation-block li {
+  display: list-item;
+  padding-inline-start: 14px;
 }
 
 .report-transactions-panel {
@@ -1673,12 +2137,17 @@ body.light-theme .dashboard-shell {
 body.light-theme .dashboard-shell h1,
 body.light-theme .dashboard-shell h2,
 body.light-theme .dashboard-shell h3,
+body.light-theme .period-title,
 body.light-theme .dashboard-shell strong,
 body.light-theme .dashboard-shell td,
 body.light-theme .metric-card strong,
 body.light-theme .mini-kpi strong,
 body.light-theme .forecast-card strong,
 body.light-theme .report-card strong,
+body.light-theme .comparison-card strong,
+body.light-theme .analysis-block-heading span,
+body.light-theme .analysis-bar-label strong,
+body.light-theme .expense-breakdown li strong,
 body.light-theme .profile-chip,
 body.light-theme .date-pill,
 body.light-theme .status-badge {
@@ -1695,7 +2164,19 @@ body.light-theme .metric-card p,
 body.light-theme .mini-kpi span,
 body.light-theme .forecast-card span,
 body.light-theme .report-card span,
+body.light-theme .comparison-card span,
+body.light-theme .comparison-card small,
+body.light-theme .analytics-control-grid label,
+body.light-theme .report-controls-grid label,
+body.light-theme .report-controls-helper,
+body.light-theme .report-card small,
+body.light-theme .report-detail-card .report-detail-sub,
 body.light-theme .monthly-report-card p:last-child,
+body.light-theme .analysis-block-heading small,
+body.light-theme .analysis-bar-label,
+body.light-theme .analysis-note,
+body.light-theme .expense-breakdown li,
+body.light-theme .recommendation-block li,
 body.light-theme th,
 body.light-theme .empty-state,
 body.light-theme .search-result-meta,
@@ -1709,11 +2190,15 @@ body.light-theme .metric-card,
 body.light-theme .mini-kpi,
 body.light-theme .forecast-card,
 body.light-theme .report-card,
+body.light-theme .comparison-card,
+body.light-theme .analysis-block,
 body.light-theme .search-shell,
 body.light-theme .date-pill,
 body.light-theme .status-badge,
 body.light-theme .category-row,
 body.light-theme .insight-row,
+body.light-theme .expense-breakdown li,
+body.light-theme .recommendation-block li,
 body.light-theme .system-list div,
 body.light-theme .toggle-row {
   background-color: rgba(255, 255, 255, 0.86);
@@ -1733,6 +2218,10 @@ body.light-theme .nav-item.active {
 body.light-theme .search-shell input,
 body.light-theme .filters input,
 body.light-theme .filters select,
+body.light-theme .filter-clear-button,
+body.light-theme .analytics-control-grid input,
+body.light-theme .analytics-control-grid select,
+body.light-theme .report-controls-grid select,
 body.light-theme .form-grid input,
 body.light-theme .form-grid textarea,
 body.light-theme .settings-panel input,
@@ -1807,6 +2296,255 @@ body.light-theme .settings-panel select option:checked {
   background: #b8f7e2;
 }
 
+body.rtl {
+  direction: rtl;
+}
+
+body.rtl .sidebar {
+  border-right: 0;
+  border-left: 1px solid rgba(34, 211, 238, 0.12);
+}
+
+body.rtl .brand-block,
+body.rtl .auth-brand,
+body.rtl .nav-item,
+body.rtl .search-shell,
+body.rtl .header-actions,
+body.rtl .panel-heading,
+body.rtl .section-heading-page,
+body.rtl .monthly-report-card,
+body.rtl .auth-card-top,
+body.rtl .toggle-row {
+  direction: rtl;
+}
+
+body.rtl .nav-item,
+body.rtl .search-result-item,
+body.rtl th,
+body.rtl td,
+body.rtl input,
+body.rtl textarea,
+body.rtl select {
+  text-align: right;
+}
+
+body.rtl .search-results {
+  left: 0;
+  right: 0;
+}
+
+body.rtl .search-result-top,
+body.rtl .search-result-meta,
+body.rtl .category-row,
+body.rtl .insight-row,
+body.rtl .toggle-row,
+body.rtl .date-pill,
+body.rtl .status-badge,
+body.rtl .profile-chip {
+  direction: rtl;
+}
+
+body.rtl .quick-actions-panel .action-button::after {
+  content: "<";
+}
+
+body.rtl .auth-back:hover {
+  transform: translateX(2px);
+}
+
+body.rtl .auth-hero-copy,
+body.rtl .how-card,
+body.rtl .landing-section,
+body.rtl .auth-card,
+body.rtl .period-context,
+body.rtl .analytics-helper-text,
+body.rtl .report-controls-helper,
+body.rtl .report-card,
+body.rtl .report-analysis-panel,
+body.rtl .analysis-block,
+body.rtl .monthly-comparison-intro,
+body.rtl .monthly-insights-panel {
+  text-align: right;
+}
+
+body:not(.rtl) .insights-column .snapshot-context {
+  gap: 8px;
+  margin: 4px 0 4px;
+  text-align: left;
+}
+
+body:not(.rtl) .insights-column .snapshot-context .period-helper,
+body:not(.rtl) .insights-column #quickInsightsHelper {
+  line-height: 1.6;
+}
+
+body:not(.rtl) .insights-column .mini-kpi-grid {
+  gap: 16px;
+}
+
+body:not(.rtl) .insights-column .mini-kpi {
+  display: grid;
+  gap: 13px;
+  min-width: 0;
+  padding-block: 20px;
+  text-align: left;
+}
+
+body:not(.rtl) .insights-column .mini-kpi span {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+body:not(.rtl) .insights-column .mini-kpi strong {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+body:not(.rtl) .insights-column .mini-kpi small {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+body:not(.rtl) .insights-column .insight-list {
+  gap: 16px;
+}
+
+body:not(.rtl) .insights-column .insight-row {
+  direction: ltr;
+  gap: 18px;
+  padding: 16px;
+  text-align: left;
+}
+
+body:not(.rtl) .insights-column .insight-row span {
+  min-width: 0;
+  text-align: left;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+body:not(.rtl) .insights-column .insight-row strong {
+  flex-shrink: 0;
+  max-width: 46%;
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: right;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+body.rtl .insights-column .snapshot-context {
+  gap: 8px;
+  margin: 4px 0 4px;
+  text-align: right;
+}
+
+body.rtl .insights-column .snapshot-context .period-helper,
+body.rtl .insights-column #quickInsightsHelper {
+  line-height: 1.6;
+}
+
+body.rtl .insights-column .mini-kpi-grid {
+  gap: 16px;
+}
+
+body.rtl .insights-column .mini-kpi {
+  display: grid;
+  gap: 13px;
+  min-width: 0;
+  padding-block: 20px;
+  text-align: right;
+}
+
+body.rtl .insights-column .mini-kpi span {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+body.rtl .insights-column .mini-kpi strong {
+  min-width: 0;
+  margin: 0;
+  direction: ltr;
+  unicode-bidi: isolate;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+}
+
+body.rtl .insights-column .mini-kpi small {
+  min-width: 0;
+  margin: 0;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+body.rtl .insights-column .insight-list {
+  gap: 16px;
+}
+
+body.rtl .insights-column .insight-row {
+  direction: rtl;
+  gap: 18px;
+  padding: 16px;
+  text-align: right;
+}
+
+body.rtl .insights-column .insight-row span {
+  min-width: 0;
+  text-align: right;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+body.rtl .insights-column .insight-row strong {
+  flex-shrink: 0;
+  max-width: 46%;
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+body.rtl .hero-step-list > div,
+body.rtl .auth-stats div,
+body.rtl .report-controls-grid label,
+body.rtl .analytics-control-grid label,
+body.rtl .settings-field-grid label,
+body.rtl .form-grid label {
+  direction: rtl;
+  text-align: right;
+}
+
+body.rtl .amount-inflow,
+body.rtl .amount-outflow,
+body.rtl #todayInflows,
+body.rtl #todayOutflows,
+body.rtl #netCashFlow,
+body.rtl #operatingCashFlow,
+body.rtl #totalInflows,
+body.rtl #totalOutflows,
+body.rtl #analyticsNetCashFlow,
+body.rtl #averageNet,
+body.rtl #forecast7,
+body.rtl #forecast14,
+body.rtl #forecast30,
+body.rtl #reportInflows,
+body.rtl #reportOutflows,
+body.rtl #reportNet,
+body.rtl #reportAverageNet,
+body.rtl .report-analysis-value {
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 @media (max-width: 1180px) {
   .landing-hero {
     grid-template-columns: minmax(0, 1fr) minmax(420px, 0.92fr);
@@ -1858,6 +2596,14 @@ body.light-theme .settings-panel select option:checked {
 
   .metric-grid,
   .analytics-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .analytics-comparison-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .report-controls-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -1958,6 +2704,7 @@ body.light-theme .settings-panel select option:checked {
   .charts-layout,
   .settings-field-grid,
   .settings-action-grid,
+  .analytics-comparison-grid,
   .report-grid {
     grid-template-columns: 1fr;
   }
@@ -1996,6 +2743,12 @@ body.light-theme .settings-panel select option:checked {
 
   .metric-grid,
   .analytics-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-control-grid,
+  .report-controls-grid,
+  .analytics-comparison-grid {
     grid-template-columns: 1fr;
   }
 
@@ -2263,6 +3016,7 @@ body.light-theme .settings-panel select option:checked {
 
   .metric-grid,
   .analytics-kpis,
+  .analytics-comparison-grid,
   .mini-kpi-grid {
     grid-template-columns: 1fr;
   }
@@ -2452,8 +3206,10 @@ body.light-theme .settings-panel select option:checked {
   .analytics-kpis,
   .report-grid,
   .performance-report-grid,
+  .analytics-comparison-grid,
   .settings-field-grid,
   .settings-action-grid,
+  .report-analysis-layout,
   .transaction-layout,
   .charts-layout,
   .forecast-grid,
@@ -2487,6 +3243,7 @@ body.light-theme .settings-panel select option:checked {
   .settings-panel select,
   .filters input,
   .filters select,
+  .filter-clear-button,
   .action-button,
   .ghost-button,
   .delete-button {
@@ -2559,3 +3316,4 @@ body.light-theme .settings-panel select option:checked {
     min-width: 520px;
   }
 }
+
