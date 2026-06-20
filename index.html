@@ -16,7 +16,7 @@
       <section class="landing-hero">
         <div class="auth-visual">
       <div class="auth-brand">
-        <div class="brand-mark">SC</div>
+        <img src="smart-cash-flow-mark-transparent-512.png" alt="Smart Cash Flow logo" class="brand-logo">
         <div>
           <strong>Smart Cash Flow</strong>
           <span>Financial clarity for small businesses</span>
@@ -115,6 +115,10 @@
               <option value="Other">Other</option>
             </select>
           </label>
+          <label class="field-with-helper">Opening Balance
+            <input type="number" id="registerOpeningBalance" min="0" step="0.01" placeholder="0">
+            <small class="field-helper">Optional. Starting cash available when you begin using the system.</small>
+          </label>
           <button class="action-button primary-action" type="submit">Create Account</button>
         </form>
         <p class="auth-switch">Already have an account? <button class="text-button" type="button" data-auth-view="loginScreen">Login</button></p>
@@ -153,16 +157,17 @@
   <div class="dashboard-shell">
     <aside class="sidebar">
       <div class="brand-block">
-        <div class="brand-mark">SC</div>
+        <img src="smart-cash-flow-mark-transparent-512.png" alt="Smart Cash Flow logo" class="brand-logo">
         <div>
           <strong>Smart Cash Flow</strong>
-          <span id="sidebarBusinessName">Small Business Suite</span>
+          <span id="sidebarBusinessName">Financial Dashboard</span>
         </div>
       </div>
 
       <nav class="sidebar-nav" aria-label="Dashboard navigation">
         <button class="nav-item active" type="button" data-section="dashboard"><span>⌂</span>Dashboard</button>
         <button class="nav-item" type="button" data-section="transactions"><span>↕</span>Transactions</button>
+        <button class="nav-item" type="button" data-section="inventory"><span>▦</span>Inventory</button>
         <button class="nav-item" type="button" data-section="analytics"><span>◌</span>Analytics</button>
         <button class="nav-item" type="button" data-section="forecasting"><span>⌁</span>Forecasting</button>
         <button class="nav-item" type="button" data-section="reports"><span>▤</span>Reports</button>
@@ -419,6 +424,165 @@
                   <tbody id="transactionsBody"></tbody>
                 </table>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="app-section" id="inventory-section">
+          <div class="section-heading-page">
+            <div>
+              <p class="eyebrow">Stock Control</p>
+              <h2>Inventory Management</h2>
+            </div>
+          </div>
+
+          <div class="inventory-kpis">
+            <article class="mini-kpi"><span>Total Products</span><strong id="inventoryTotalProducts">0</strong></article>
+            <article class="mini-kpi"><span>Total Stock Value</span><strong id="inventoryStockValue">$0</strong></article>
+            <article class="mini-kpi"><span>Low Stock Items</span><strong id="inventoryLowStock">0</strong></article>
+            <article class="mini-kpi"><span>Out of Stock Items</span><strong id="inventoryOutOfStock">0</strong></article>
+          </div>
+
+          <div class="section-grid inventory-form-layout">
+            <form class="panel inventory-form" id="productForm">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Products</p>
+                  <h2>Add Product</h2>
+                </div>
+              </div>
+
+              <div class="form-grid inventory-product-grid">
+                <label>
+                  Product Name
+                  <input type="text" id="inventoryProductName" placeholder="Keyboard" required>
+                </label>
+
+                <label>
+                  Category
+                  <input type="text" id="inventoryProductCategory" placeholder="Accessories">
+                </label>
+
+                <label>
+                  Purchase Unit Price
+                  <input type="number" id="inventoryPurchaseUnitPrice" min="0" step="0.01" placeholder="0.00" required>
+                </label>
+
+                <label>
+                  Selling Unit Price
+                  <input type="number" id="inventorySellingUnitPrice" min="0" step="0.01" placeholder="0.00" required>
+                </label>
+
+                <label>
+                  Opening Quantity
+                  <input type="number" id="inventoryOpeningQuantity" min="0" step="1" placeholder="0" required>
+                </label>
+
+                <label>
+                  Minimum Stock
+                  <input type="number" id="inventoryMinimumStock" min="0" step="1" placeholder="0" required>
+                </label>
+
+                <label class="wide-field">
+                  Notes
+                  <textarea id="inventoryProductNotes" rows="3" placeholder="Optional product notes"></textarea>
+                </label>
+              </div>
+
+              <button class="action-button primary-action" type="submit">Add Product</button>
+            </form>
+
+            <form class="panel inventory-form" id="stockMovementForm">
+              <div class="panel-heading">
+                <div>
+                  <p class="eyebrow">Stock Movement</p>
+                  <h2>Record Stock Movement</h2>
+                </div>
+              </div>
+
+              <div class="form-grid">
+                <label>
+                  Product
+                  <select id="stockMovementProduct" required></select>
+                </label>
+
+                <label>
+                  Movement Type
+                  <select id="stockMovementType">
+                    <option value="stock-in">Stock In / Purchase Stock</option>
+                    <option value="stock-out">Stock Out / Sell Product</option>
+                  </select>
+                </label>
+
+                <label>
+                  Quantity
+                  <input type="number" id="stockMovementQuantity" min="1" step="1" placeholder="0" required>
+                </label>
+
+                <label>
+                  Date
+                  <input type="date" id="stockMovementDate" required>
+                </label>
+
+                <label>
+                  Notes
+                  <textarea id="stockMovementNotes" rows="3" placeholder="Optional movement notes"></textarea>
+                </label>
+              </div>
+
+              <button class="action-button primary-action" type="submit">Save Movement</button>
+            </form>
+          </div>
+
+          <div class="panel inventory-table-panel products-table-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Product List</p>
+                <h2>Inventory Products</h2>
+              </div>
+            </div>
+            <div class="table-wrap inventory-table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Current Stock</th>
+                    <th>Purchase Price</th>
+                    <th>Selling Price</th>
+                    <th>Stock Value</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="inventoryProductsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="panel inventory-table-panel movements-table-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">Stock History</p>
+                <h2>Stock Movements</h2>
+              </div>
+            </div>
+            <div class="table-wrap inventory-movements-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Product</th>
+                    <th>Movement</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Amount</th>
+                    <th>Profit</th>
+                    <th>Linked Transaction</th>
+                  </tr>
+                </thead>
+                <tbody id="stockMovementsBody"></tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -747,6 +911,12 @@
                     <option value="Online Store">Online Store</option>
                     <option value="Other">Other</option>
                   </select>
+                </label>
+
+                <label class="field-with-helper">
+                  Opening Balance
+                  <input type="number" id="openingBalanceInput" min="0" step="0.01" placeholder="0">
+                  <small class="field-helper">Optional. Starting cash available when you begin using the system.</small>
                 </label>
 
                 <label>

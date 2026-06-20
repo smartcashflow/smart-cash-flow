@@ -701,6 +701,21 @@ body.light-theme .sidebar {
   box-shadow: 0 14px 30px rgba(34, 211, 238, 0.18);
 }
 
+.brand-logo {
+  display: block;
+  width: 54px;
+  height: 54px;
+  max-width: 54px;
+  max-height: 54px;
+  flex-shrink: 0;
+  object-fit: contain;
+  object-position: center;
+  background: rgba(2, 8, 23, 0.72);
+  border: 1px solid rgba(34, 211, 238, 0.22);
+  border-radius: 16px;
+  box-shadow: 0 14px 30px rgba(34, 211, 238, 0.18);
+}
+
 .brand-block strong,
 .brand-block span {
   display: block;
@@ -960,6 +975,7 @@ body.light-theme .search-results {
 .filters input,
 .filters select,
 .form-grid input,
+.form-grid select,
 .form-grid textarea,
 .settings-panel input,
 .settings-panel select {
@@ -1543,7 +1559,82 @@ label {
   font-weight: 700;
 }
 
+.field-helper {
+  color: var(--faint);
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.inventory-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.inventory-form-layout {
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+  align-items: start;
+  margin-bottom: 18px;
+}
+
+.inventory-form {
+  display: grid;
+  gap: 14px;
+}
+
+.inventory-product-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wide-field {
+  grid-column: 1 / -1;
+}
+
+.inventory-table-panel {
+  margin-top: 18px;
+}
+
+.inventory-table-wrap table {
+  min-width: 980px;
+}
+
+.inventory-movements-wrap table {
+  min-width: 1040px;
+}
+
+.stock-status,
+.movement-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.stock-status.in,
+.movement-badge.stock-in {
+  color: #bbf7d0;
+  background: rgba(16, 185, 129, 0.16);
+}
+
+.stock-status.low {
+  color: #fde68a;
+  background: rgba(251, 191, 36, 0.16);
+}
+
+.stock-status.out,
+.movement-badge.stock-out {
+  color: #fecdd3;
+  background: rgba(251, 113, 133, 0.16);
+}
+
 .form-grid input,
+.form-grid select,
 .form-grid textarea,
 .settings-panel input,
 .settings-panel select,
@@ -1679,6 +1770,10 @@ tbody tr:hover {
 
 .compact-table table {
   min-width: 520px;
+}
+
+#transactions-section .table-wrap table {
+  min-width: 760px;
 }
 
 .empty-state {
@@ -2168,6 +2263,7 @@ body.light-theme .comparison-card span,
 body.light-theme .comparison-card small,
 body.light-theme .analytics-control-grid label,
 body.light-theme .report-controls-grid label,
+body.light-theme .inventory-form label,
 body.light-theme .report-controls-helper,
 body.light-theme .report-card small,
 body.light-theme .report-detail-card .report-detail-sub,
@@ -2192,6 +2288,7 @@ body.light-theme .forecast-card,
 body.light-theme .report-card,
 body.light-theme .comparison-card,
 body.light-theme .analysis-block,
+body.light-theme .inventory-table-panel,
 body.light-theme .search-shell,
 body.light-theme .date-pill,
 body.light-theme .status-badge,
@@ -2224,6 +2321,7 @@ body.light-theme .analytics-control-grid select,
 body.light-theme .report-controls-grid select,
 body.light-theme .form-grid input,
 body.light-theme .form-grid textarea,
+body.light-theme .form-grid select,
 body.light-theme .settings-panel input,
 body.light-theme .settings-panel select {
   color: #0f172a;
@@ -2269,7 +2367,24 @@ body.light-theme .type-badge.inflow {
   background: rgba(16, 185, 129, 0.14);
 }
 
+body.light-theme .stock-status.in,
+body.light-theme .movement-badge.stock-in {
+  color: #047857;
+  background: rgba(16, 185, 129, 0.14);
+}
+
 body.light-theme .type-badge.outflow {
+  background: rgba(251, 113, 133, 0.14);
+}
+
+body.light-theme .stock-status.low {
+  color: #854d0e;
+  background: rgba(251, 191, 36, 0.18);
+}
+
+body.light-theme .stock-status.out,
+body.light-theme .movement-badge.stock-out {
+  color: #be123c;
   background: rgba(251, 113, 133, 0.14);
 }
 
@@ -2356,6 +2471,8 @@ body.rtl .auth-hero-copy,
 body.rtl .how-card,
 body.rtl .landing-section,
 body.rtl .auth-card,
+body.rtl .inventory-form,
+body.rtl .inventory-table-panel,
 body.rtl .period-context,
 body.rtl .analytics-helper-text,
 body.rtl .report-controls-helper,
@@ -2518,6 +2635,7 @@ body.rtl .auth-stats div,
 body.rtl .report-controls-grid label,
 body.rtl .analytics-control-grid label,
 body.rtl .settings-field-grid label,
+body.rtl .inventory-product-grid label,
 body.rtl .form-grid label {
   direction: rtl;
   text-align: right;
@@ -2540,6 +2658,7 @@ body.rtl #reportInflows,
 body.rtl #reportOutflows,
 body.rtl #reportNet,
 body.rtl #reportAverageNet,
+body.rtl #inventoryStockValue,
 body.rtl .report-analysis-value {
   direction: ltr;
   unicode-bidi: isolate;
@@ -2570,7 +2689,7 @@ body.rtl .report-analysis-value {
     justify-content: center;
   }
 
-  .brand-block div:not(.brand-mark),
+  .brand-block > div,
   .nav-item {
     font-size: 0;
   }
@@ -2653,8 +2772,9 @@ body.rtl .report-analysis-value {
     justify-content: flex-start;
   }
 
-  .brand-block div:not(.brand-mark) {
+  .brand-block > div {
     display: block;
+    font-size: 1rem;
   }
 
   .sidebar-nav {
@@ -2748,6 +2868,8 @@ body.rtl .report-analysis-value {
 
   .analytics-control-grid,
   .report-controls-grid,
+  .inventory-form-layout,
+  .inventory-product-grid,
   .analytics-comparison-grid {
     grid-template-columns: 1fr;
   }
@@ -2816,6 +2938,9 @@ body.rtl .report-analysis-value {
   .auth-form,
   .settings-field-grid,
   .settings-action-grid,
+  .inventory-kpis,
+  .inventory-form-layout,
+  .inventory-product-grid,
   .transaction-layout,
   .charts-layout,
   .forecast-grid,
@@ -2953,9 +3078,11 @@ body.rtl .report-analysis-value {
     align-items: flex-start;
   }
 
-  .brand-mark {
-    width: 42px;
-    height: 42px;
+  .brand-logo {
+    width: 54px;
+    height: 54px;
+    max-width: 54px;
+    max-height: 54px;
     border-radius: 14px;
   }
 
@@ -3204,6 +3331,7 @@ body.rtl .report-analysis-value {
 
   .metric-grid,
   .analytics-kpis,
+  .inventory-kpis,
   .report-grid,
   .performance-report-grid,
   .analytics-comparison-grid,
@@ -3238,6 +3366,7 @@ body.rtl .report-analysis-value {
   }
 
   .form-grid input,
+  .form-grid select,
   .form-grid textarea,
   .settings-panel input,
   .settings-panel select,

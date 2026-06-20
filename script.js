@@ -1,10 +1,14 @@
 ﻿const TRANSACTIONS_KEY = "smartCashFlowPrototypeTransactions";
 const SETTINGS_KEY = "smartCashFlowPrototypeSettings";
 const USER_KEY = "smartCashFlowPrototypeUser";
+const PRODUCTS_KEY = "smartCashFlowPrototypeProducts";
+const STOCK_MOVEMENTS_KEY = "smartCashFlowPrototypeStockMovements";
 const DEMO_OPENING_BALANCE = 100000;
 
 const state = {
   transactions: [],
+  products: [],
+  stockMovements: [],
   user: null,
   settings: {
     businessName: "Small Business Suite",
@@ -12,6 +16,8 @@ const state = {
     email: "owner@smartcashflow.demo",
     currency: "USD",
     businessType: "Retail",
+    openingBalance: DEMO_OPENING_BALANCE,
+    openingBalanceCustom: false,
     lightTheme: false,
     language: "en"
   },
@@ -36,6 +42,7 @@ const translations = {
   en: {
     navDashboard: "Dashboard",
     navTransactions: "Transactions",
+    navInventory: "Inventory",
     navAnalytics: "Analytics",
     navForecasting: "Forecasting",
     navReports: "Reports",
@@ -132,6 +139,60 @@ const translations = {
     notes: "Notes",
     categoryPlaceholder: "Sales, rent, payroll...",
     notesPlaceholder: "Optional transaction details",
+    productName: "Product Name",
+    quantity: "Quantity",
+    purchaseUnitPrice: "Purchase Unit Price",
+    sellingUnitPrice: "Selling Unit Price",
+    product: "Product",
+    profit: "Profit",
+    inventory: "Inventory",
+    stockControl: "Stock Control",
+    inventoryManagement: "Inventory Management",
+    totalProducts: "Total Products",
+    totalStockValue: "Total Stock Value",
+    lowStockItems: "Low Stock Items",
+    outOfStockItems: "Out of Stock Items",
+    products: "Products",
+    addProduct: "Add Product",
+    productCategoryPlaceholder: "Accessories",
+    openingQuantity: "Opening Quantity",
+    minimumStock: "Minimum Stock",
+    optionalProductNotes: "Optional product notes",
+    stockMovement: "Stock Movement",
+    recordStockMovement: "Record Stock Movement",
+    movementType: "Movement Type",
+    stockInPurchase: "Stock In / Purchase Stock",
+    stockOutSell: "Stock Out / Sell Product",
+    saveMovement: "Save Movement",
+    optionalMovementNotes: "Optional movement notes",
+    productList: "Product List",
+    inventoryProducts: "Inventory Products",
+    currentStock: "Current Stock",
+    stockValue: "Stock Value",
+    status: "Status",
+    actions: "Actions",
+    outOfStock: "Out of Stock",
+    lowStock: "Low Stock",
+    inStock: "In Stock",
+    stockHistory: "Stock History",
+    stockMovements: "Stock Movements",
+    movement: "Movement",
+    unitPrice: "Unit Price",
+    totalAmount: "Total Amount",
+    linkedTransaction: "Linked Transaction",
+    noProductsYet: "No products yet. Add a product to start managing inventory.",
+    noStockMovementsYet: "No stock movements yet.",
+    selectProduct: "Select product",
+    inventoryProductRequired: "Product name is required.",
+    inventoryInvalidPrice: "Prices must be zero or positive.",
+    inventoryInvalidQuantity: "Quantities must be zero or positive.",
+    movementProductRequired: "Select a product first.",
+    movementInvalidQuantity: "Quantity must be greater than zero.",
+    movementInsufficientStock: "Cannot sell more than current stock.",
+    deleteProductConfirm: "Delete this product and its stock movements? Linked cash transactions will stay in the ledger.",
+    inventoryPurchaseCategory: "Inventory Purchase",
+    productSalesCategory: "Product Sales",
+    linkedTransactionLabel: "Linked transaction",
     action: "Action",
     type: "Type",
     delete: "Delete",
@@ -298,6 +359,8 @@ const translations = {
     clearDemoData: "Clear Demo Data",
     logout: "Logout",
     openingBalance: "Opening Balance",
+    openingBalanceHelper: "Optional. Starting cash available when you begin using the system.",
+    invalidOpeningBalance: "Opening Balance must be a valid non-negative number.",
     availableCash: "Available Cash",
     avgDailyOutflows: "Avg Daily Outflows",
     sevenDayAverage: "7-day average",
@@ -331,7 +394,7 @@ const translations = {
     transactionSingular: "transaction",
     transactionPlural: "transactions",
     restoreConfirm: "Restore demo data?",
-    clearConfirm: "Clear all demo transactions?",
+    clearConfirm: "Clear all demo transactions and inventory data?",
     restoredToast: "Demo data restored successfully.",
     clearedToast: "Demo data cleared successfully.",
     pdfSuccess: "PDF report downloaded successfully.",
@@ -363,6 +426,7 @@ const arabicUiTranslations = {};
 Object.assign(arabicUiTranslations, {
   navDashboard: "لوحة التحكم",
   navTransactions: "المعاملات",
+  navInventory: "المخزن",
   navAnalytics: "التحليلات",
   navForecasting: "التوقعات",
   navReports: "التقارير",
@@ -459,6 +523,60 @@ Object.assign(arabicUiTranslations, {
   notes: "ملاحظات",
   categoryPlaceholder: "مبيعات، إيجار، رواتب...",
   notesPlaceholder: "تفاصيل اختيارية للمعاملة",
+  productName: "اسم الصنف",
+  quantity: "الكمية",
+  purchaseUnitPrice: "سعر شراء الوحدة",
+  sellingUnitPrice: "سعر بيع الوحدة",
+  product: "الصنف",
+  profit: "الربح",
+  inventory: "المخزن",
+  stockControl: "إدارة المخزون",
+  inventoryManagement: "إدارة المخزن",
+  totalProducts: "إجمالي الأصناف",
+  totalStockValue: "قيمة المخزون",
+  lowStockItems: "أصناف قربت تخلص",
+  outOfStockItems: "أصناف نفدت",
+  products: "الأصناف",
+  addProduct: "إضافة صنف",
+  productCategoryPlaceholder: "إكسسوارات",
+  openingQuantity: "الكمية الافتتاحية",
+  minimumStock: "الحد الأدنى للمخزون",
+  optionalProductNotes: "ملاحظات اختيارية عن الصنف",
+  stockMovement: "حركة المخزون",
+  recordStockMovement: "تسجيل حركة مخزون",
+  movementType: "نوع الحركة",
+  stockInPurchase: "دخول مخزون / شراء بضاعة",
+  stockOutSell: "خروج مخزون / بيع بضاعة",
+  saveMovement: "حفظ الحركة",
+  optionalMovementNotes: "ملاحظات اختيارية عن الحركة",
+  productList: "قائمة الأصناف",
+  inventoryProducts: "أصناف المخزن",
+  currentStock: "الكمية الحالية",
+  stockValue: "قيمة المخزون",
+  status: "الحالة",
+  actions: "إجراءات",
+  outOfStock: "نفد المخزون",
+  lowStock: "مخزون منخفض",
+  inStock: "متوفر",
+  stockHistory: "سجل المخزون",
+  stockMovements: "حركات المخزون",
+  movement: "الحركة",
+  unitPrice: "سعر الوحدة",
+  totalAmount: "الإجمالي",
+  linkedTransaction: "المعاملة المرتبطة",
+  noProductsYet: "لا توجد أصناف بعد. أضف صنفًا لبدء إدارة المخزون.",
+  noStockMovementsYet: "لا توجد حركات مخزون بعد.",
+  selectProduct: "اختر الصنف",
+  inventoryProductRequired: "اسم الصنف مطلوب.",
+  inventoryInvalidPrice: "يجب أن تكون الأسعار صفرًا أو أكبر.",
+  inventoryInvalidQuantity: "يجب أن تكون الكميات صفرًا أو أكبر.",
+  movementProductRequired: "اختر صنفًا أولًا.",
+  movementInvalidQuantity: "يجب أن تكون الكمية أكبر من صفر.",
+  movementInsufficientStock: "لا يمكن بيع كمية أكبر من المخزون الحالي.",
+  deleteProductConfirm: "هل تريد حذف هذا الصنف وحركات المخزون الخاصة به؟ ستبقى المعاملات المالية المرتبطة في السجل.",
+  inventoryPurchaseCategory: "Inventory Purchase",
+  productSalesCategory: "Product Sales",
+  linkedTransactionLabel: "معاملة مرتبطة",
   action: "الإجراء",
   type: "النوع",
   delete: "حذف",
@@ -625,6 +743,8 @@ Object.assign(arabicUiTranslations, {
   clearDemoData: "مسح البيانات التجريبية",
   logout: "تسجيل الخروج",
   openingBalance: "الرصيد الافتتاحي",
+  openingBalanceHelper: "اختياري. الرصيد النقدي المتاح عند بداية استخدام النظام.",
+  invalidOpeningBalance: "يجب أن يكون الرصيد الافتتاحي رقمًا صحيحًا وغير سالب.",
   availableCash: "النقد المتاح",
   avgDailyOutflows: "متوسط المصروفات اليومية",
   sevenDayAverage: "متوسط 7 أيام",
@@ -658,7 +778,7 @@ Object.assign(arabicUiTranslations, {
   transactionSingular: "معاملة",
   transactionPlural: "معاملات",
   restoreConfirm: "هل تريد استعادة البيانات التجريبية؟",
-  clearConfirm: "هل تريد مسح كل المعاملات التجريبية؟",
+  clearConfirm: "هل تريد مسح كل المعاملات وبيانات المخزون التجريبية؟",
   restoredToast: "تمت استعادة البيانات التجريبية بنجاح.",
   clearedToast: "تم مسح البيانات التجريبية بنجاح.",
   pdfSuccess: "تم تنزيل تقرير PDF بنجاح.",
@@ -768,73 +888,230 @@ function escapeHtml(value) {
     .replaceAll("'", "&#039;");
 }
 
-function createDemoTransactions() {
+const CLIENT_MEDICAL_PRODUCT_ROWS = [
+  { name: "جهاز قياس ضغط دم الكترونى", purchaseUnitPrice: 1500, sellingUnitPrice: 1700, quantities: [2, 1, 1] },
+  { name: "جهاز قياس سكر بالدم", purchaseUnitPrice: 650, sellingUnitPrice: 850, quantities: [3, 1, 1] },
+  { name: "جهاز قياس نسبه الاكسجين بالدم", purchaseUnitPrice: 1100, sellingUnitPrice: 1500, quantities: [5, 5, 5] },
+  { name: "ميزان طبى رقمى", purchaseUnitPrice: 1200, sellingUnitPrice: 1800, quantities: [5, 4, 4] },
+  { name: "ترمومتر", purchaseUnitPrice: 300, sellingUnitPrice: 500, quantities: [5, 2, 2] },
+  { name: "جهاز استنشاق", purchaseUnitPrice: 450, sellingUnitPrice: 650, quantities: [5, 5, 5] },
+  { name: "جهاز تركيز الاوكسجين", purchaseUnitPrice: 19000, sellingUnitPrice: 22000, quantities: [1, 1, 1] },
+  { name: "جهاز شفط الافرازات", purchaseUnitPrice: 5000, sellingUnitPrice: 7000, quantities: [4, 4, 4] },
+  { name: "اسطوانه اكسجين", purchaseUnitPrice: 4000, sellingUnitPrice: 5500, quantities: [5, 5, 5] },
+  { name: "عكازات", purchaseUnitPrice: 450, sellingUnitPrice: 700, quantities: [5, 5, 5] },
+  { name: "مشيات كبار السن", purchaseUnitPrice: 1200, sellingUnitPrice: 1800, quantities: [5, 5, 5] },
+  { name: "كراسى متحركه", purchaseUnitPrice: 5000, sellingUnitPrice: 7500, quantities: [15, 5, 5] },
+  { name: "ركبه طبيه", purchaseUnitPrice: 600, sellingUnitPrice: 900, quantities: [20, 10, 100] },
+  { name: "سماعات طبيه", purchaseUnitPrice: 1200, sellingUnitPrice: 1800, quantities: [12, 12, 12] },
+  { name: "شاش طبى", purchaseUnitPrice: 700, sellingUnitPrice: 1000, quantities: [50, 20, 50] },
+  { name: "قطن طبى", purchaseUnitPrice: 220, sellingUnitPrice: 320, quantities: [100, 10, 10] },
+  { name: "لاصقات جروح", purchaseUnitPrice: 80, sellingUnitPrice: 150, quantities: [150, 25, 25] },
+  { name: "مطهرات", purchaseUnitPrice: 40, sellingUnitPrice: 60, quantities: [150, 25, 25] },
+  { name: "اربطه ضغطه", purchaseUnitPrice: 80, sellingUnitPrice: 120, quantities: [25, 25, 25] },
+  { name: "قفازات طبيه", purchaseUnitPrice: 180, sellingUnitPrice: 250, quantities: [200, 25, 150] },
+  { name: "حفاضات كبار السن", purchaseUnitPrice: 220, sellingUnitPrice: 300, quantities: [150, 25, 25] },
+  { name: "اكياس بول", purchaseUnitPrice: 25, sellingUnitPrice: 40, quantities: [175, 25, 25] },
+  { name: "جهاز قياس الضعط الزئقى", purchaseUnitPrice: 1400, sellingUnitPrice: 1800, quantities: [10, 10, 10] },
+  { name: "سرنجات وابر", purchaseUnitPrice: 180, sellingUnitPrice: 250, quantities: [250, 25, 250] },
+  { name: "كمامات طبيه", purchaseUnitPrice: 80, sellingUnitPrice: 120, quantities: [500, 25, 250] },
+  { name: "معقمات طبيه", purchaseUnitPrice: 70, sellingUnitPrice: 100, quantities: [20, 20, 250] }
+];
+
+const CLIENT_DEMO_EXPENSE_ROWS = [
+  { day: 2, amount: 20000, notes: "مرحلة لفرع القاهرة" },
+  { day: 9, amount: 20000, notes: "مرحلة لفرع القاهرة" },
+  { day: 16, amount: 25000, notes: "مرحلة لفرع القاهرة" },
+  { day: 18, amount: 3600, notes: "عمولة ke298د/ محمد عبد الغفار/ السبد محمد السيد" },
+  { day: 27, amount: 50, notes: "اكراميات مستشفى التطبيقيين+مستشفى الف سلامة" },
+  { day: 28, amount: 145, notes: "فاتورة مياة مكتب سوهاج" },
+  { day: 30, amount: 35000, notes: "مرحلة لفرع القاهرة" },
+  { day: 31, amount: 100, notes: "نظافة مكتب سوهاج" },
+  { day: 31, amount: 4400, notes: "عمولة ke298د/ محمد عبد الغفار/ ريان عماد حمدى" },
+  { day: 0, amount: 4125, notes: "مصروفات عادل" },
+  { day: 0, amount: 4400, notes: "عمولة ke298د/ محمد عبد الغفار/ منى امين حماد" },
+  { day: 0, amount: 5000, notes: "عمولة ke3cicد/ محمد عبد الغفار/ عبد الحميد ماجد" },
+  { day: 0, amount: 4400, notes: "عمولة ke298د/ محمد عبد الغفار/ هدية محمد احمد" }
+];
+
+const CLIENT_DEMO_MONTHS = [
+  { monthOffset: 2, quantityIndex: 0 },
+  { monthOffset: 1, quantityIndex: 1 },
+  { monthOffset: 0, quantityIndex: 2 }
+];
+
+function getClientDemoMonthInfo(monthOffset) {
   const today = new Date();
-  const monthTemplates = [
-    { monthOffset: 2, amountShift: 0.92 },
-    { monthOffset: 1, amountShift: 1 },
-    { monthOffset: 0, amountShift: 1.08 }
-  ];
-  const monthlyPlan = [
-    { day: 1, type: "inflow", amount: 8200, category: "Retail Sales", notes: "Opening week store sales" },
-    { day: 1, type: "outflow", amount: 1450, category: "Rent", notes: "Store rent payment" },
-    { day: 2, type: "outflow", amount: 620, category: "Software", notes: "Accounting and POS subscriptions" },
-    { day: 3, type: "inflow", amount: 5600, category: "Online Orders", notes: "Marketplace payout" },
-    { day: 4, type: "outflow", amount: 3900, category: "Inventory", notes: "Core stock replenishment" },
-    { day: 5, type: "inflow", amount: 4700, category: "Service Revenue", notes: "Service package payment" },
-    { day: 6, type: "outflow", amount: 980, category: "Delivery", notes: "Courier and logistics fees" },
-    { day: 8, type: "inflow", amount: 10400, category: "Wholesale", notes: "Wholesale account payment" },
-    { day: 9, type: "outflow", amount: 1850, category: "Marketing", notes: "Digital campaign spend" },
-    { day: 10, type: "outflow", amount: 760, category: "Supplies", notes: "Office and store supplies" },
-    { day: 11, type: "inflow", amount: 7200, category: "Retail Sales", notes: "Midweek retail sales" },
-    { day: 12, type: "outflow", amount: 1750, category: "Utilities", notes: "Electricity, internet, and phone" },
-    { day: 14, type: "inflow", amount: 6400, category: "Client Payment", notes: "Client invoice payment" },
-    { day: 15, type: "outflow", amount: 5200, category: "Payroll", notes: "Mid-month payroll" },
-    { day: 16, type: "inflow", amount: 3800, category: "Subscription Revenue", notes: "Recurring customer subscriptions" },
-    { day: 17, type: "outflow", amount: 1180, category: "Maintenance", notes: "Equipment maintenance" },
-    { day: 19, type: "inflow", amount: 6900, category: "Online Orders", notes: "Online checkout settlements" },
-    { day: 20, type: "outflow", amount: 2850, category: "Inventory", notes: "Packaging and replacement stock" },
-    { day: 21, type: "inflow", amount: 9100, category: "Retail Sales", notes: "Weekend retail sales" },
-    { day: 23, type: "outflow", amount: 1320, category: "Delivery", notes: "Shipping partner settlement" },
-    { day: 24, type: "inflow", amount: 7800, category: "Service Revenue", notes: "Project milestone payment" },
-    { day: 25, type: "outflow", amount: 2300, category: "Taxes", notes: "Estimated tax provision" },
-    { day: 26, type: "inflow", amount: 11600, category: "Wholesale", notes: "Distributor payment" },
-    { day: 27, type: "outflow", amount: 5100, category: "Payroll", notes: "Month-end payroll" },
-    { day: 28, type: "outflow", amount: 940, category: "Marketing", notes: "Retargeting ads" },
-    { day: 29, type: "inflow", amount: 7600, category: "Client Payment", notes: "Final invoice collection" }
-  ];
+  const monthStart = new Date(today.getFullYear(), today.getMonth() - monthOffset, 1);
+  const daysInMonth = new Date(monthStart.getFullYear(), monthStart.getMonth() + 1, 0).getDate();
+  const maxUsableDay = monthOffset === 0 ? Math.max(1, Math.min(today.getDate(), daysInMonth)) : daysInMonth;
 
-  return monthTemplates.flatMap((template, monthIndex) => {
-    const monthDate = new Date(today.getFullYear(), today.getMonth() - template.monthOffset, 1);
-    const daysInMonth = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
-    const isCurrentMonth = template.monthOffset === 0;
-    const maxUsableDay = isCurrentMonth ? today.getDate() : daysInMonth;
+  return {
+    year: monthStart.getFullYear(),
+    month: monthStart.getMonth(),
+    daysInMonth,
+    maxUsableDay
+  };
+}
 
-    return monthlyPlan.map((transaction, transactionIndex) => {
-      const plannedDay = Math.min(transaction.day, daysInMonth);
-      const day = isCurrentMonth
-        ? Math.max(1, Math.min(maxUsableDay, Math.ceil((plannedDay / 29) * maxUsableDay)))
-        : plannedDay;
-      const amount = roundMoney(transaction.amount * template.amountShift);
+function getClientDemoDate(monthOffset, preferredDay, index, totalRows) {
+  const monthInfo = getClientDemoMonthInfo(monthOffset);
+  const distributedDay = Math.ceil(((index + 1) / (totalRows + 1)) * monthInfo.maxUsableDay);
+  const rawDay = preferredDay > 0 ? preferredDay : distributedDay;
+  const day = Math.max(1, Math.min(rawDay, monthInfo.maxUsableDay));
 
-      return {
-        id: 1001 + monthIndex * monthlyPlan.length + transactionIndex,
-        type: transaction.type,
-        amount,
-        category: transaction.category,
-        date: toDateString(new Date(monthDate.getFullYear(), monthDate.getMonth(), day)),
-        notes: transaction.notes
-      };
+  return toDateString(new Date(monthInfo.year, monthInfo.month, day));
+}
+
+function getClientProductCategory(name) {
+  if (/عكازات|مشيات|كراسى|ركبه/.test(name)) {
+    return "Mobility Aids";
+  }
+
+  if (/شاش|قطن|لاصقات|مطهرات|اربطه|قفازات|حفاضات|اكياس|سرنجات|كمامات|معقمات/.test(name)) {
+    return "Medical Supplies";
+  }
+
+  if (/جهاز|ميزان|ترمومتر|سماعات|اسطوانه|أسطوانة/.test(name)) {
+    return "Medical Devices";
+  }
+
+  return "Accessories";
+}
+
+function getClientExpenseCategory(notes) {
+  if (/مرتب|مرتبات|سلف/.test(notes)) {
+    return "Salaries";
+  }
+
+  if (/مياة|مياه|كهرباء|غاز|انترنت|تليفون|فاتورة/.test(notes)) {
+    return "Bills";
+  }
+
+  if (/انتقال|مرحلة|فرع القاهرة/.test(notes)) {
+    return "Transportation";
+  }
+
+  if (/تأمين|معاش|معاشات/.test(notes)) {
+    return "Insurance";
+  }
+
+  if (/صيانة|معمل/.test(notes)) {
+    return "Maintenance";
+  }
+
+  return "Other Expenses";
+}
+
+function createDemoProductsFromClientRows() {
+  return CLIENT_MEDICAL_PRODUCT_ROWS.map((row, index) => {
+    const totalSold = row.quantities.reduce((total, quantity) => total + quantity, 0);
+    const minimumStock = totalSold >= 100 ? 20 : 10;
+    const currentStock = Math.max(minimumStock + 5, Math.ceil(totalSold * 0.25));
+
+    return {
+      id: `client-medical-product-${index + 1}`,
+      name: row.name,
+      category: getClientProductCategory(row.name),
+      purchaseUnitPrice: row.purchaseUnitPrice,
+      sellingUnitPrice: row.sellingUnitPrice,
+      currentStock,
+      minimumStock,
+      createdAt: getClientDemoDate(2, 1, index, CLIENT_MEDICAL_PRODUCT_ROWS.length),
+      notes: "Client medical demo product"
+    };
+  });
+}
+
+function createDemoStockMovementsFromClientRows(products) {
+  const productByName = new Map(products.map((product) => [product.name, product]));
+  const stockMovements = [];
+
+  CLIENT_DEMO_MONTHS.forEach((month, monthIndex) => {
+    CLIENT_MEDICAL_PRODUCT_ROWS.forEach((row, productIndex) => {
+      const quantity = Number(row.quantities[month.quantityIndex] || 0);
+
+      if (quantity <= 0) {
+        return;
+      }
+
+      const product = productByName.get(row.name);
+      const totalAmount = roundMoney(quantity * row.sellingUnitPrice);
+      const profit = roundMoney((row.sellingUnitPrice - row.purchaseUnitPrice) * quantity);
+      const linkedTransactionId = 710000 + monthIndex * 1000 + productIndex + 1;
+
+      stockMovements.push({
+        id: `client-stock-out-${monthIndex + 1}-${productIndex + 1}`,
+        productId: product.id,
+        movementType: "stock-out",
+        quantity,
+        unitPrice: row.sellingUnitPrice,
+        totalAmount,
+        profit,
+        date: getClientDemoDate(month.monthOffset, 0, productIndex, CLIENT_MEDICAL_PRODUCT_ROWS.length),
+        linkedTransactionId,
+        notes: `Sold ${quantity} x ${row.name}`
+      });
     });
   });
+
+  return stockMovements;
+}
+
+function createDemoTransactionsFromClientRows(stockMovements, products) {
+  const productById = new Map(products.map((product) => [product.id, product]));
+  const salesTransactions = stockMovements.map((movement) => {
+    const product = productById.get(movement.productId);
+
+    return {
+      id: movement.linkedTransactionId,
+      type: "inflow",
+      amount: movement.totalAmount,
+      category: "Product Sales",
+      date: movement.date,
+      notes: `Stock Out: Sold ${movement.quantity} x ${product?.name || "product"}. Profit: ${formatCurrency(movement.profit)}`
+    };
+  });
+  const expenseTransactions = CLIENT_DEMO_MONTHS.flatMap((month, monthIndex) => {
+    return CLIENT_DEMO_EXPENSE_ROWS.map((expense, expenseIndex) => ({
+      id: 720000 + monthIndex * 1000 + expenseIndex + 1,
+      type: "outflow",
+      amount: expense.amount,
+      category: getClientExpenseCategory(expense.notes),
+      date: getClientDemoDate(month.monthOffset, expense.day, expenseIndex, CLIENT_DEMO_EXPENSE_ROWS.length),
+      notes: expense.notes
+    }));
+  });
+
+  return [...salesTransactions, ...expenseTransactions];
+}
+
+function createDemoDataset() {
+  const products = createDemoProductsFromClientRows();
+  const stockMovements = createDemoStockMovementsFromClientRows(products);
+  const transactions = createDemoTransactionsFromClientRows(stockMovements, products);
+
+  return {
+    transactions,
+    products,
+    stockMovements
+  };
+}
+
+function createDemoTransactions() {
+  return createDemoDataset().transactions;
 }
 
 function loadState() {
   const savedTransactions = localStorage.getItem(TRANSACTIONS_KEY);
+  const savedProducts = localStorage.getItem(PRODUCTS_KEY);
+  const savedStockMovements = localStorage.getItem(STOCK_MOVEMENTS_KEY);
   const savedSettings = localStorage.getItem(SETTINGS_KEY);
   const savedUser = localStorage.getItem(USER_KEY);
+  const demoData = !savedTransactions ? createDemoDataset() : null;
 
-  state.transactions = savedTransactions ? JSON.parse(savedTransactions) : createDemoTransactions();
+  state.transactions = savedTransactions ? JSON.parse(savedTransactions) : demoData.transactions;
+  state.products = savedProducts ? JSON.parse(savedProducts) : demoData?.products || [];
+  state.stockMovements = savedStockMovements ? JSON.parse(savedStockMovements) : demoData?.stockMovements || [];
   state.user = savedUser ? JSON.parse(savedUser) : null;
   state.settings = {
     ...state.settings,
@@ -843,11 +1120,21 @@ function loadState() {
   };
 
   saveTransactions();
+  saveProducts();
+  saveStockMovements();
   saveSettings();
 }
 
 function saveTransactions() {
   localStorage.setItem(TRANSACTIONS_KEY, JSON.stringify(state.transactions));
+}
+
+function saveProducts() {
+  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(state.products));
+}
+
+function saveStockMovements() {
+  localStorage.setItem(STOCK_MOVEMENTS_KEY, JSON.stringify(state.stockMovements));
 }
 
 function saveSettings() {
@@ -876,6 +1163,7 @@ function cacheElements() {
     registerPassword: $("#registerPassword"),
     registerCurrency: $("#registerCurrency"),
     registerBusinessType: $("#registerBusinessType"),
+    registerOpeningBalance: $("#registerOpeningBalance"),
     loginEmail: $("#loginEmail"),
     loginPassword: $("#loginPassword"),
     demoLoginHint: $("#demoLoginHint"),
@@ -928,6 +1216,26 @@ function cacheElements() {
     businessSnapshotHelper: $("#businessSnapshotHelper"),
     quickInsightsHelper: $("#quickInsightsHelper"),
     quickInsights: $("#quickInsights"),
+    productForm: $("#productForm"),
+    inventoryProductName: $("#inventoryProductName"),
+    inventoryProductCategory: $("#inventoryProductCategory"),
+    inventoryPurchaseUnitPrice: $("#inventoryPurchaseUnitPrice"),
+    inventorySellingUnitPrice: $("#inventorySellingUnitPrice"),
+    inventoryOpeningQuantity: $("#inventoryOpeningQuantity"),
+    inventoryMinimumStock: $("#inventoryMinimumStock"),
+    inventoryProductNotes: $("#inventoryProductNotes"),
+    stockMovementForm: $("#stockMovementForm"),
+    stockMovementProduct: $("#stockMovementProduct"),
+    stockMovementType: $("#stockMovementType"),
+    stockMovementQuantity: $("#stockMovementQuantity"),
+    stockMovementDate: $("#stockMovementDate"),
+    stockMovementNotes: $("#stockMovementNotes"),
+    inventoryTotalProducts: $("#inventoryTotalProducts"),
+    inventoryStockValue: $("#inventoryStockValue"),
+    inventoryLowStock: $("#inventoryLowStock"),
+    inventoryOutOfStock: $("#inventoryOutOfStock"),
+    inventoryProductsBody: $("#inventoryProductsBody"),
+    stockMovementsBody: $("#stockMovementsBody"),
     analyticsPeriodSelector: $("#analyticsPeriodSelector"),
     analyticsPeriodLabel: $("#analyticsPeriodLabel"),
     analyticsCustomControls: $("#analyticsCustomControls"),
@@ -979,6 +1287,7 @@ function cacheElements() {
     reportToast: $("#reportToast"),
     businessNameInput: $("#businessNameInput"),
     ownerNameInput: $("#ownerNameInput"),
+    openingBalanceInput: $("#openingBalanceInput"),
     currencySelector: $("#currencySelector"),
     businessTypeSelector: $("#businessTypeSelector"),
     languageSelector: $("#languageSelector"),
@@ -1086,6 +1395,8 @@ function applyLanguage() {
   setLabelText("#registerForm label:nth-child(4)", t("password"));
   setLabelText("#registerForm label:nth-child(5)", t("currency"));
   setLabelText("#registerForm label:nth-child(6)", t("businessType"));
+  setLabelText("#registerForm label:nth-child(7)", t("openingBalance"));
+  setText("#registerForm .field-helper", t("openingBalanceHelper"));
   setText("#registerForm .primary-action", t("createAccount"));
   const registerSwitchButton = $("#registerScreen .auth-switch button");
   const registerSwitchText = $("#registerScreen .auth-switch")?.childNodes[0];
@@ -1133,6 +1444,7 @@ function applyLanguage() {
   const navLabels = {
     dashboard: "navDashboard",
     transactions: "navTransactions",
+    inventory: "navInventory",
     analytics: "navAnalytics",
     forecasting: "navForecasting",
     reports: "navReports",
@@ -1152,6 +1464,7 @@ function applyLanguage() {
   const pageTitles = {
     dashboard: "dashboardTitle",
     transactions: "transactions",
+    inventory: "inventory",
     analytics: "analytics",
     forecasting: "forecasting",
     reports: "reports",
@@ -1245,6 +1558,49 @@ function applyLanguage() {
   const recentHeaders = [t("date"), t("type"), t("category"), t("amount")];
   $all(".compact-table thead th").forEach((header, index) => {
     header.textContent = recentHeaders[index] || header.textContent;
+  });
+
+  setText("#inventory-section .section-heading-page .eyebrow", t("stockControl"));
+  setText("#inventory-section .section-heading-page h2", t("inventoryManagement"));
+  const inventoryKpiLabels = [t("totalProducts"), t("totalStockValue"), t("lowStockItems"), t("outOfStockItems")];
+  $all(".inventory-kpis .mini-kpi span").forEach((label, index) => {
+    label.textContent = inventoryKpiLabels[index] || label.textContent;
+  });
+  setText("#productForm .panel-heading .eyebrow", t("products"));
+  setText("#productForm .panel-heading h2", t("addProduct"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(1)", t("productName"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(2)", t("category"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(3)", t("purchaseUnitPrice"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(4)", t("sellingUnitPrice"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(5)", t("openingQuantity"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(6)", t("minimumStock"));
+  setLabelText("#productForm .inventory-product-grid label:nth-child(7)", t("notes"));
+  elements.inventoryProductName.placeholder = t("productName");
+  elements.inventoryProductCategory.placeholder = t("productCategoryPlaceholder");
+  elements.inventoryProductNotes.placeholder = t("optionalProductNotes");
+  setText("#productForm .primary-action", t("addProduct"));
+  setText("#stockMovementForm .panel-heading .eyebrow", t("stockMovement"));
+  setText("#stockMovementForm .panel-heading h2", t("recordStockMovement"));
+  setLabelText("#stockMovementForm .form-grid label:nth-child(1)", t("product"));
+  setLabelText("#stockMovementForm .form-grid label:nth-child(2)", t("movementType"));
+  setLabelText("#stockMovementForm .form-grid label:nth-child(3)", t("quantity"));
+  setLabelText("#stockMovementForm .form-grid label:nth-child(4)", t("date"));
+  setLabelText("#stockMovementForm .form-grid label:nth-child(5)", t("notes"));
+  setOptionText(elements.stockMovementType, "stock-in", t("stockInPurchase"));
+  setOptionText(elements.stockMovementType, "stock-out", t("stockOutSell"));
+  elements.stockMovementNotes.placeholder = t("optionalMovementNotes");
+  setText("#stockMovementForm .primary-action", t("saveMovement"));
+  setText(".products-table-panel .eyebrow", t("productList"));
+  setText(".products-table-panel h2", t("inventoryProducts"));
+  setText(".movements-table-panel .eyebrow", t("stockHistory"));
+  setText(".movements-table-panel h2", t("stockMovements"));
+  const productHeaders = [t("product"), t("category"), t("currentStock"), t("purchaseUnitPrice"), t("sellingUnitPrice"), t("stockValue"), t("status"), t("actions")];
+  $all(".inventory-table-wrap thead th").forEach((header, index) => {
+    header.textContent = productHeaders[index] || header.textContent;
+  });
+  const movementHeaders = [t("date"), t("product"), t("movement"), t("quantity"), t("unitPrice"), t("totalAmount"), t("profit"), t("linkedTransaction")];
+  $all(".inventory-movements-wrap thead th").forEach((header, index) => {
+    header.textContent = movementHeaders[index] || header.textContent;
   });
 
   setText("#analytics-section .section-heading-page .eyebrow", t("performanceIntelligence"));
@@ -1344,7 +1700,9 @@ function applyLanguage() {
   setLabelText(".settings-field-grid label:nth-child(2)", t("ownerName"));
   setLabelText(".settings-field-grid label:nth-child(3)", t("currency"));
   setLabelText(".settings-field-grid label:nth-child(4)", t("businessType"));
-  setLabelText(".settings-field-grid label:nth-child(5)", t("language"));
+  setLabelText(".settings-field-grid label:nth-child(5)", t("openingBalance"));
+  setLabelText(".settings-field-grid label:nth-child(6)", t("language"));
+  setText(".settings-field-grid .field-helper", t("openingBalanceHelper"));
   elements.businessNameInput.placeholder = t("businessNamePlaceholder");
   elements.ownerNameInput.placeholder = t("ownerNamePlaceholder");
   const toggleText = $(".toggle-row span");
@@ -1389,6 +1747,14 @@ function updateAuthVisibility() {
 
 function registerUser(event) {
   event.preventDefault();
+  const openingBalanceData = getOpeningBalanceInputData(elements.registerOpeningBalance);
+
+  if (!openingBalanceData.isValid) {
+    elements.registerOpeningBalance.setCustomValidity(t("invalidOpeningBalance"));
+    elements.registerOpeningBalance.reportValidity();
+    elements.registerOpeningBalance.setCustomValidity("");
+    return;
+  }
 
   state.user = {
     businessName: elements.registerBusinessName.value.trim(),
@@ -1397,6 +1763,8 @@ function registerUser(event) {
     password: elements.registerPassword.value,
     currency: elements.registerCurrency.value,
     businessType: elements.registerBusinessType.value,
+    openingBalance: openingBalanceData.value,
+    openingBalanceCustom: openingBalanceData.hasValue,
     loggedIn: false,
     onboarded: false
   };
@@ -1407,7 +1775,9 @@ function registerUser(event) {
     ownerName: state.user.ownerName,
     email: state.user.email,
     currency: state.user.currency,
-    businessType: state.user.businessType
+    businessType: state.user.businessType,
+    openingBalance: state.user.openingBalance,
+    openingBalanceCustom: state.user.openingBalanceCustom
   };
 
   saveUser();
@@ -1420,11 +1790,27 @@ function completeOnboarding(mode) {
     return;
   }
 
-  state.transactions = mode === "demo" ? createDemoTransactions() : [];
+  if (mode === "demo") {
+    const demoData = createDemoDataset();
+    state.transactions = demoData.transactions;
+    state.products = demoData.products;
+    state.stockMovements = demoData.stockMovements;
+  } else {
+    state.transactions = [];
+    state.products = [];
+    state.stockMovements = [];
+  }
+  if (!state.settings.openingBalanceCustom) {
+    state.settings.openingBalance = mode === "demo" ? DEMO_OPENING_BALANCE : 0;
+  }
+  state.user.openingBalance = state.settings.openingBalance;
+  state.user.openingBalanceCustom = state.settings.openingBalanceCustom;
   state.user.loggedIn = true;
   state.user.onboarded = true;
   saveUser();
   saveTransactions();
+  saveProducts();
+  saveStockMovements();
   saveSettings();
   updateAuthVisibility();
   refreshApp();
@@ -1664,7 +2050,8 @@ function getForecast() {
 function getDashboardInsightMetrics() {
   const totals = getTotals();
   const netCashFlow = roundMoney(totals.inflow - totals.outflow);
-  const availableCash = roundMoney(DEMO_OPENING_BALANCE + netCashFlow);
+  const openingBalance = getOpeningBalance();
+  const availableCash = roundMoney(openingBalance + netCashFlow);
   const runwayPeriod = getRunwayOutflowPeriod();
   const runwayDateLabels = getDateRangeLabels(runwayPeriod.start, runwayPeriod.end);
   const runwayTransactions = filterTransactionsByDateRange(runwayPeriod.start, runwayPeriod.end);
@@ -1683,7 +2070,7 @@ function getDashboardInsightMetrics() {
     totalInflows: roundMoney(totals.inflow),
     totalOutflows: roundMoney(totals.outflow),
     netCashFlow,
-    openingBalance: DEMO_OPENING_BALANCE,
+    openingBalance,
     availableCash,
     averageDailyOutflows,
     averageDailyOutflowsLabel: runwayPeriod.labelKey === "last30CalendarDays" ? t("avgDailyOutflowsLast30") : t("avgDailyOutflowsStoredRange"),
@@ -1883,6 +2270,118 @@ function renderTransactions() {
   const transactions = filteredTransactions();
   elements.transactionsBody.innerHTML = transactionRows(transactions, true);
   elements.transactionCountChip.textContent = `${transactions.length} ${transactions.length === 1 ? t("transactionSingular") : t("transactionPlural")}`;
+}
+
+function getInventoryStatus(product) {
+  if (Number(product.currentStock) === 0) {
+    return { key: "out", label: t("outOfStock") };
+  }
+
+  if (Number(product.currentStock) <= Number(product.minimumStock)) {
+    return { key: "low", label: t("lowStock") };
+  }
+
+  return { key: "in", label: t("inStock") };
+}
+
+function getInventoryMetrics() {
+  const totalProducts = state.products.length;
+  const totalStockValue = state.products.reduce((total, product) => {
+    return total + Number(product.currentStock || 0) * Number(product.purchaseUnitPrice || 0);
+  }, 0);
+  const lowStockItems = state.products.filter((product) => Number(product.currentStock) > 0 && Number(product.currentStock) <= Number(product.minimumStock)).length;
+  const outOfStockItems = state.products.filter((product) => Number(product.currentStock) === 0).length;
+
+  return {
+    totalProducts,
+    totalStockValue: roundMoney(totalStockValue),
+    lowStockItems,
+    outOfStockItems
+  };
+}
+
+function populateStockProductSelect() {
+  const selectedProduct = elements.stockMovementProduct.value;
+  elements.stockMovementProduct.innerHTML = [
+    `<option value="">${t("selectProduct")}</option>`,
+    ...state.products.map((product) => `<option value="${product.id}">${escapeHtml(product.name)}</option>`)
+  ].join("");
+
+  if (state.products.some((product) => product.id === selectedProduct)) {
+    elements.stockMovementProduct.value = selectedProduct;
+  }
+}
+
+function renderInventoryProducts() {
+  if (!state.products.length) {
+    elements.inventoryProductsBody.innerHTML = `<tr><td colspan="8" class="empty-state">${t("noProductsYet")}</td></tr>`;
+    return;
+  }
+
+  elements.inventoryProductsBody.innerHTML = [...state.products]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((product) => {
+      const status = getInventoryStatus(product);
+      const stockValue = roundMoney(Number(product.currentStock || 0) * Number(product.purchaseUnitPrice || 0));
+
+      return `
+        <tr>
+          <td>${escapeHtml(product.name)}</td>
+          <td>${product.category ? escapeHtml(product.category) : "-"}</td>
+          <td>${Number(product.currentStock || 0)}</td>
+          <td>${formatCurrency(product.purchaseUnitPrice)}</td>
+          <td>${formatCurrency(product.sellingUnitPrice)}</td>
+          <td>${formatCurrency(stockValue)}</td>
+          <td><span class="stock-status ${status.key}">${status.label}</span></td>
+          <td><button class="delete-button" type="button" data-delete-product-id="${product.id}">${t("delete")}</button></td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function renderStockMovements() {
+  if (!state.stockMovements.length) {
+    elements.stockMovementsBody.innerHTML = `<tr><td colspan="8" class="empty-state">${t("noStockMovementsYet")}</td></tr>`;
+    return;
+  }
+
+  elements.stockMovementsBody.innerHTML = [...state.stockMovements]
+    .sort((a, b) => b.date.localeCompare(a.date) || String(b.id).localeCompare(String(a.id)))
+    .map((movement) => {
+      const product = state.products.find((item) => item.id === movement.productId);
+      const isStockIn = movement.movementType === "stock-in";
+      const movementLabel = isStockIn ? t("stockInPurchase") : t("stockOutSell");
+      const profit = isStockIn || movement.profit === null || movement.profit === undefined
+        ? "—"
+        : formatCurrency(movement.profit);
+      const profitClass = !isStockIn && Number(movement.profit) < 0 ? "amount-outflow" : "amount-inflow";
+
+      return `
+        <tr>
+          <td>${formatDate(movement.date)}</td>
+          <td>${product ? escapeHtml(product.name) : "-"}</td>
+          <td><span class="movement-badge ${isStockIn ? "stock-in" : "stock-out"}">${movementLabel}</span></td>
+          <td>${Number(movement.quantity)}</td>
+          <td>${formatCurrency(movement.unitPrice)}</td>
+          <td>${formatCurrency(movement.totalAmount)}</td>
+          <td class="${isStockIn ? "" : profitClass}">${profit}</td>
+          <td>${t("linkedTransactionLabel")} #${movement.linkedTransactionId}</td>
+        </tr>
+      `;
+    })
+    .join("");
+}
+
+function renderInventory() {
+  const metrics = getInventoryMetrics();
+  elements.inventoryTotalProducts.textContent = metrics.totalProducts;
+  elements.inventoryStockValue.textContent = formatCurrency(metrics.totalStockValue);
+  elements.inventoryLowStock.textContent = metrics.lowStockItems;
+  elements.inventoryOutOfStock.textContent = metrics.outOfStockItems;
+  populateStockProductSelect();
+  renderInventoryProducts();
+  renderStockMovements();
 }
 
 function renderSearchResults() {
@@ -2730,12 +3229,15 @@ function renderSettings() {
   document.body.classList.toggle("light-theme", state.settings.lightTheme);
   elements.businessNameInput.value = state.settings.businessName;
   elements.ownerNameInput.value = state.settings.ownerName;
+  if (document.activeElement !== elements.openingBalanceInput) {
+    elements.openingBalanceInput.value = getOpeningBalance();
+  }
   elements.currencySelector.value = state.settings.currency;
   elements.businessTypeSelector.value = state.settings.businessType;
   elements.languageSelector.value = currentLanguage();
   elements.themeToggle.checked = state.settings.lightTheme;
   applyLanguage();
-  elements.sidebarBusinessName.textContent = state.settings.businessName;
+  elements.sidebarBusinessName.textContent = "Financial Dashboard";
   elements.profileChip.textContent = `${state.settings.ownerName || t("ownerFallback")} آ· ${state.settings.email || t("demoFallback")}`;
 }
 
@@ -2743,6 +3245,7 @@ function refreshApp() {
   renderSettings();
   renderDashboard();
   renderTransactions();
+  renderInventory();
   renderSearchResults();
   renderAnalytics();
   renderForecasting();
@@ -2757,6 +3260,7 @@ function setActiveSection(sectionName) {
   const pageTitles = {
     dashboard: "dashboardTitle",
     transactions: "transactions",
+    inventory: "inventory",
     analytics: "analytics",
     forecasting: "forecasting",
     reports: "reports",
@@ -2814,8 +3318,13 @@ function restoreDemoData() {
     return;
   }
 
-  state.transactions = createDemoTransactions();
+  const demoData = createDemoDataset();
+  state.transactions = demoData.transactions;
+  state.products = demoData.products;
+  state.stockMovements = demoData.stockMovements;
   saveTransactions();
+  saveProducts();
+  saveStockMovements();
   refreshApp();
   showReportToast(t("restoredToast"));
 }
@@ -2828,7 +3337,11 @@ function clearDemoData() {
   }
 
   state.transactions = [];
+  state.products = [];
+  state.stockMovements = [];
   saveTransactions();
+  saveProducts();
+  saveStockMovements();
   refreshApp();
   showReportToast(t("clearedToast"));
 }
@@ -2858,11 +3371,212 @@ function updateSelectedReportPeriod() {
   renderReports();
 }
 
+function readOptionalNumber(input) {
+  const value = input.value.trim();
+  return value === "" ? null : Number(value);
+}
+
+function getOpeningBalanceInputData(input) {
+  const value = readOptionalNumber(input);
+
+  if (value === null) {
+    return {
+      isValid: true,
+      value: 0,
+      hasValue: false
+    };
+  }
+
+  if (!Number.isFinite(value) || value < 0) {
+    return {
+      isValid: false,
+      value: 0,
+      hasValue: true
+    };
+  }
+
+  return {
+    isValid: true,
+    value: roundMoney(value),
+    hasValue: true
+  };
+}
+
+function getOpeningBalance() {
+  const value = Number(state.settings.openingBalance);
+  return Number.isFinite(value) && value >= 0 ? roundMoney(value) : 0;
+}
+
+function addProduct(event) {
+  event.preventDefault();
+
+  const name = elements.inventoryProductName.value.trim();
+  const category = elements.inventoryProductCategory.value.trim();
+  const purchaseUnitPrice = Number(elements.inventoryPurchaseUnitPrice.value);
+  const sellingUnitPrice = Number(elements.inventorySellingUnitPrice.value);
+  const openingQuantity = Number(elements.inventoryOpeningQuantity.value);
+  const minimumStock = Number(elements.inventoryMinimumStock.value);
+
+  if (!name) {
+    elements.inventoryProductName.setCustomValidity(t("inventoryProductRequired"));
+    elements.inventoryProductName.reportValidity();
+    elements.inventoryProductName.setCustomValidity("");
+    return;
+  }
+
+  if (!Number.isFinite(purchaseUnitPrice) || !Number.isFinite(sellingUnitPrice) || purchaseUnitPrice < 0 || sellingUnitPrice < 0) {
+    elements.inventoryPurchaseUnitPrice.setCustomValidity(t("inventoryInvalidPrice"));
+    elements.inventoryPurchaseUnitPrice.reportValidity();
+    elements.inventoryPurchaseUnitPrice.setCustomValidity("");
+    return;
+  }
+
+  if (!Number.isFinite(openingQuantity) || !Number.isFinite(minimumStock) || openingQuantity < 0 || minimumStock < 0) {
+    elements.inventoryOpeningQuantity.setCustomValidity(t("inventoryInvalidQuantity"));
+    elements.inventoryOpeningQuantity.reportValidity();
+    elements.inventoryOpeningQuantity.setCustomValidity("");
+    return;
+  }
+
+  state.products.push({
+    id: `product-${Date.now()}`,
+    name,
+    category,
+    purchaseUnitPrice: roundMoney(purchaseUnitPrice),
+    sellingUnitPrice: roundMoney(sellingUnitPrice),
+    currentStock: Math.floor(openingQuantity),
+    minimumStock: Math.floor(minimumStock),
+    createdAt: getTodayDateString(),
+    notes: elements.inventoryProductNotes.value.trim()
+  });
+
+  saveProducts();
+  elements.productForm.reset();
+  refreshApp();
+}
+
+function createInventoryTransaction({ type, amount, category, date, notes }) {
+  const transaction = {
+    id: Date.now(),
+    type,
+    amount: roundMoney(amount),
+    category,
+    date,
+    notes
+  };
+
+  state.transactions.push(transaction);
+  return transaction;
+}
+
+function addStockMovement(event) {
+  event.preventDefault();
+
+  const product = state.products.find((item) => item.id === elements.stockMovementProduct.value);
+  const movementType = elements.stockMovementType.value;
+  const quantity = Number(elements.stockMovementQuantity.value);
+  const date = elements.stockMovementDate.value || getTodayDateString();
+  const notes = elements.stockMovementNotes.value.trim();
+
+  if (!product) {
+    elements.stockMovementProduct.setCustomValidity(t("movementProductRequired"));
+    elements.stockMovementProduct.reportValidity();
+    elements.stockMovementProduct.setCustomValidity("");
+    return;
+  }
+
+  if (!Number.isFinite(quantity) || quantity <= 0) {
+    elements.stockMovementQuantity.setCustomValidity(t("movementInvalidQuantity"));
+    elements.stockMovementQuantity.reportValidity();
+    elements.stockMovementQuantity.setCustomValidity("");
+    return;
+  }
+
+  const normalizedQuantity = Math.floor(quantity);
+  const isStockIn = movementType === "stock-in";
+
+  if (normalizedQuantity <= 0) {
+    elements.stockMovementQuantity.setCustomValidity(t("movementInvalidQuantity"));
+    elements.stockMovementQuantity.reportValidity();
+    elements.stockMovementQuantity.setCustomValidity("");
+    return;
+  }
+
+  if (!isStockIn && normalizedQuantity > Number(product.currentStock)) {
+    elements.stockMovementQuantity.setCustomValidity(t("movementInsufficientStock"));
+    elements.stockMovementQuantity.reportValidity();
+    elements.stockMovementQuantity.setCustomValidity("");
+    return;
+  }
+
+  const unitPrice = isStockIn ? Number(product.purchaseUnitPrice) : Number(product.sellingUnitPrice);
+  const totalAmount = roundMoney(normalizedQuantity * unitPrice);
+  const profit = isStockIn ? null : roundMoney((Number(product.sellingUnitPrice) - Number(product.purchaseUnitPrice)) * normalizedQuantity);
+  const transaction = createInventoryTransaction({
+    type: isStockIn ? "outflow" : "inflow",
+    amount: totalAmount,
+    category: isStockIn ? t("inventoryPurchaseCategory") : t("productSalesCategory"),
+    date,
+    notes: isStockIn
+      ? `Stock In: Purchased ${normalizedQuantity} x ${product.name}${notes ? `. ${notes}` : ""}`
+      : `Stock Out: Sold ${normalizedQuantity} x ${product.name}. Profit: ${formatCurrency(profit)}${notes ? `. ${notes}` : ""}`
+  });
+
+  product.currentStock = isStockIn
+    ? Number(product.currentStock) + normalizedQuantity
+    : Number(product.currentStock) - normalizedQuantity;
+
+  state.stockMovements.push({
+    id: `movement-${Date.now()}`,
+    productId: product.id,
+    movementType,
+    quantity: normalizedQuantity,
+    unitPrice: roundMoney(unitPrice),
+    totalAmount,
+    profit,
+    date,
+    linkedTransactionId: transaction.id,
+    notes
+  });
+
+  saveTransactions();
+  saveProducts();
+  saveStockMovements();
+  elements.stockMovementForm.reset();
+  elements.stockMovementDate.value = getTodayDateString();
+  refreshApp();
+}
+
+function deleteProduct(productId) {
+  const confirmed = window.confirm(t("deleteProductConfirm"));
+
+  if (!confirmed) {
+    return;
+  }
+
+  state.products = state.products.filter((product) => product.id !== productId);
+  state.stockMovements = state.stockMovements.filter((movement) => movement.productId !== productId);
+  saveProducts();
+  saveStockMovements();
+  refreshApp();
+}
+
 function updateUserFromSettings() {
+  const openingBalanceData = getOpeningBalanceInputData(elements.openingBalanceInput);
+
+  if (!openingBalanceData.isValid) {
+    elements.openingBalanceInput.setCustomValidity(t("invalidOpeningBalance"));
+    elements.openingBalanceInput.reportValidity();
+    elements.openingBalanceInput.setCustomValidity("");
+    return;
+  }
+
   state.settings.businessName = elements.businessNameInput.value.trim() || "Small Business Suite";
   state.settings.ownerName = elements.ownerNameInput.value.trim() || "Demo Owner";
   state.settings.currency = elements.currencySelector.value;
   state.settings.businessType = elements.businessTypeSelector.value;
+  state.settings.openingBalance = openingBalanceData.value;
+  state.settings.openingBalanceCustom = openingBalanceData.hasValue;
   state.settings.language = elements.languageSelector.value;
   state.settings.lightTheme = elements.themeToggle.checked;
 
@@ -2871,6 +3585,8 @@ function updateUserFromSettings() {
     state.user.ownerName = state.settings.ownerName;
     state.user.currency = state.settings.currency;
     state.user.businessType = state.settings.businessType;
+    state.user.openingBalance = state.settings.openingBalance;
+    state.user.openingBalanceCustom = state.settings.openingBalanceCustom;
   }
 
   saveSettings();
@@ -3334,11 +4050,20 @@ function wireEvents() {
   });
 
   elements.transactionForm.addEventListener("submit", addTransaction);
+  elements.productForm.addEventListener("submit", addProduct);
+  elements.stockMovementForm.addEventListener("submit", addStockMovement);
 
   elements.transactionsBody.addEventListener("click", (event) => {
     const deleteButton = event.target.closest("[data-delete-id]");
     if (deleteButton) {
       deleteTransaction(Number(deleteButton.dataset.deleteId));
+    }
+  });
+
+  elements.inventoryProductsBody.addEventListener("click", (event) => {
+    const deleteButton = event.target.closest("[data-delete-product-id]");
+    if (deleteButton) {
+      deleteProduct(deleteButton.dataset.deleteProductId);
     }
   });
 
@@ -3389,7 +4114,7 @@ function wireEvents() {
     input.addEventListener("change", updateSelectedReportPeriod);
   });
 
-  [elements.businessNameInput, elements.ownerNameInput, elements.currencySelector, elements.businessTypeSelector, elements.languageSelector, elements.themeToggle].forEach((input) => {
+  [elements.businessNameInput, elements.ownerNameInput, elements.openingBalanceInput, elements.currencySelector, elements.businessTypeSelector, elements.languageSelector, elements.themeToggle].forEach((input) => {
     input.addEventListener("input", updateUserFromSettings);
     input.addEventListener("change", updateUserFromSettings);
   });
@@ -3400,6 +4125,7 @@ function wireEvents() {
 loadState();
 cacheElements();
 elements.date.value = getTodayDateString();
+elements.stockMovementDate.value = getTodayDateString();
 wireEvents();
 updateAuthVisibility();
 refreshApp();
