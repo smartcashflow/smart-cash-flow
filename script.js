@@ -574,8 +574,8 @@ Object.assign(arabicUiTranslations, {
   movementInvalidQuantity: "يجب أن تكون الكمية أكبر من صفر.",
   movementInsufficientStock: "لا يمكن بيع كمية أكبر من المخزون الحالي.",
   deleteProductConfirm: "هل تريد حذف هذا الصنف وحركات المخزون الخاصة به؟ ستبقى المعاملات المالية المرتبطة في السجل.",
-  inventoryPurchaseCategory: "Inventory Purchase",
-  productSalesCategory: "Product Sales",
+  inventoryPurchaseCategory: "مشتريات مخزون",
+  productSalesCategory: "مبيعات منتجات",
   linkedTransactionLabel: "معاملة مرتبطة",
   action: "الإجراء",
   type: "النوع",
@@ -964,42 +964,42 @@ function getClientDemoDate(monthOffset, preferredDay, index, totalRows) {
 
 function getClientProductCategory(name) {
   if (/عكازات|مشيات|كراسى|ركبه/.test(name)) {
-    return "Mobility Aids";
+    return "معدات حركة";
   }
 
   if (/شاش|قطن|لاصقات|مطهرات|اربطه|قفازات|حفاضات|اكياس|سرنجات|كمامات|معقمات/.test(name)) {
-    return "Medical Supplies";
+    return "مستلزمات طبية";
   }
 
   if (/جهاز|ميزان|ترمومتر|سماعات|اسطوانه|أسطوانة/.test(name)) {
-    return "Medical Devices";
+    return "أجهزة طبية";
   }
 
-  return "Accessories";
+  return "إكسسوارات";
 }
 
 function getClientExpenseCategory(notes) {
   if (/مرتب|مرتبات|سلف/.test(notes)) {
-    return "Salaries";
+    return "مرتبات";
   }
 
   if (/مياة|مياه|كهرباء|غاز|انترنت|تليفون|فاتورة/.test(notes)) {
-    return "Bills";
+    return "فواتير";
   }
 
   if (/انتقال|مرحلة|فرع القاهرة/.test(notes)) {
-    return "Transportation";
+    return "انتقالات";
   }
 
   if (/تأمين|معاش|معاشات/.test(notes)) {
-    return "Insurance";
+    return "تأمينات ومعاشات";
   }
 
   if (/صيانة|معمل/.test(notes)) {
-    return "Maintenance";
+    return "صيانة";
   }
 
-  return "Other Expenses";
+  return "مصاريف أخرى";
 }
 
 function createDemoProductsFromClientRows() {
@@ -1017,7 +1017,7 @@ function createDemoProductsFromClientRows() {
       currentStock,
       minimumStock,
       createdAt: getClientDemoDate(2, 1, index, CLIENT_MEDICAL_PRODUCT_ROWS.length),
-      notes: "Client medical demo product"
+      notes: "صنف طبي من بيانات العميل التجريبية"
     };
   });
 }
@@ -1049,7 +1049,7 @@ function createDemoStockMovementsFromClientRows(products) {
         profit,
         date: getClientDemoDate(month.monthOffset, 0, productIndex, CLIENT_MEDICAL_PRODUCT_ROWS.length),
         linkedTransactionId,
-        notes: `Sold ${quantity} x ${row.name}`
+        notes: `بيع ${quantity} × ${row.name}`
       });
     });
   });
@@ -1066,9 +1066,9 @@ function createDemoTransactionsFromClientRows(stockMovements, products) {
       id: movement.linkedTransactionId,
       type: "inflow",
       amount: movement.totalAmount,
-      category: "Product Sales",
+      category: "مبيعات منتجات",
       date: movement.date,
-      notes: `Stock Out: Sold ${movement.quantity} x ${product?.name || "product"}. Profit: ${formatCurrency(movement.profit)}`
+      notes: `خروج مخزون: بيع ${movement.quantity} × ${product?.name || "صنف"}. الربح: ${formatCurrency(movement.profit)}`
     };
   });
   const expenseTransactions = CLIENT_DEMO_MONTHS.flatMap((month, monthIndex) => {
@@ -1078,7 +1078,7 @@ function createDemoTransactionsFromClientRows(stockMovements, products) {
       amount: expense.amount,
       category: getClientExpenseCategory(expense.notes),
       date: getClientDemoDate(month.monthOffset, expense.day, expenseIndex, CLIENT_DEMO_EXPENSE_ROWS.length),
-      notes: expense.notes
+      notes: ""
     }));
   });
 
@@ -3462,7 +3462,7 @@ function createInventoryTransaction({ type, amount, category, date, notes }) {
     amount: roundMoney(amount),
     category,
     date,
-    notes
+    notes: notes || ""
   };
 
   state.transactions.push(transaction);
